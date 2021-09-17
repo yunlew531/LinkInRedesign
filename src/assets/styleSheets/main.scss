@@ -1,0 +1,8 @@
+@import './reset';
+@import './variables';
+
+body {
+  background: $white-200;
+  color: $dark-100;
+  font-family: 'Montserrat', sans-serif;
+}
