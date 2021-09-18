@@ -34,7 +34,9 @@ const navList = ref([
   <header class="nav">
     <div class="nav-container">
       <h1 class="logo-title">
-        <img class="logo-img" src="src/assets/images/Logo.png" alt="LinkIn">
+        <router-link to="/">
+          <img class="logo-img" src="src/assets/images/Logo.png" alt="LinkIn">
+        </router-link>
       </h1>
       <ul class="nav-list">
         <li v-for="link in navList" :key="link.title">
@@ -160,6 +162,7 @@ const navList = ref([
   width: 90px;
   border-left: 1px solid $white-100;
   border-right: 1px solid $white-100;
+  cursor: pointer;
 }
 .arrow-up-right {
   margin-left: 2px;

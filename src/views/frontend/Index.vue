@@ -3,14 +3,12 @@
   <main class="container">
     <router-view />
   </main>
+  <Footer />
 </template>
 
 <script setup>
 import Navigation from '@/components/frontend/layouts/Navigation.vue';
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-router.push('/profile')
+import Footer from '@/components/frontend/layouts/Footer.vue';
 </script>
 
 <style lang="scss" scoped>
