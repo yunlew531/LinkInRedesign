@@ -67,7 +67,7 @@ const navLinks = ref([
             <option value="english" selected>english</option>
             <option value="chinese">chinese</option>
           </select>
-          <img class="chevron-down" src="src/assets/images/chevron-down.png" alt="chevron-down">
+          <img class="chevron-down" src="@/assets/images/chevron-down.png" alt="chevron-down">
         </div>
       </div>
     </div>
@@ -77,9 +77,6 @@ const navLinks = ref([
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
 
-.footer {
-  background: $white-300;
-}
 .container {
   width: 1180px;
   margin: auto;

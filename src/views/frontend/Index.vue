@@ -15,5 +15,6 @@ import Footer from '@/components/frontend/layouts/Footer.vue';
 .container {
   width: 1180px;
   margin: auto;
+  padding: 120px 0 40px;
 }
 </style>

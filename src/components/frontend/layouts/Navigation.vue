@@ -4,30 +4,32 @@ import { ref } from 'vue';
 const navList = ref([
   {
     title: 'FEED',
-    url: 'src/assets/images/feed.png',
+    name: 'feed',
     path: '/feed',
   },
   {
     title: 'NETWORK',
-    url: 'src/assets/images/network.png',
+    name: 'network',
     path: '/network',
   },
   {
     title: 'JOBS',
-    url: 'src/assets/images/jobs.png',
+    name: 'jobs',
     path: '/jobs',
   },
   {
     title: 'CHAT',
-    url: 'src/assets/images/chat.png',
+    name: 'chat',
     path: '/chat',
   },
   {
     title: 'NOTICES',
-    url: 'src/assets/images/notices.png',
+    name: 'notices',
     path: '/notices',
   },
 ]);
+
+const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, import.meta.url).href;
 </script>
 
 <template>
@@ -35,22 +37,22 @@ const navList = ref([
     <div class="nav-container">
       <h1 class="logo-title">
         <router-link to="/">
-          <img class="logo-img" src="src/assets/images/Logo.png" alt="LinkIn">
+          <img class="logo-img" src="@/assets/images/Logo.png" alt="LinkIn">
         </router-link>
       </h1>
       <ul class="nav-list">
         <li v-for="link in navList" :key="link.title">
           <router-link :to="link.path">
-            <img class="nav-link-img" :src="link.url" :alt="link.title">
+            <img class="nav-link-img" :src="getImageUrl(link.name)" :alt="link.title">
           </router-link>
         </li>
       </ul>
       <div class="search-panel">
-        <img class="search-img" src="src/assets/images/search.png" alt="search">
+        <img class="search-img" src="@/assets/images/search.png" alt="search">
         <input class="search-input" type="text" placeholder="Search">
       </div>
       <div class="user-panel">
-        <img class="user-panel-photo" src="src/assets/images/user-1.png" alt="D. Kargave">
+        <img class="user-panel-photo" src="@/assets/images/user-1.png" alt="D. Kargave">
         <div class="user-panel-content">
           <p>
             <span class="user-panel-name">D. Kargave</span><span class="user-panel-who">YOU</span>
@@ -58,12 +60,12 @@ const navList = ref([
           <p>
             <span class="user-panel-view-num">367 views today</span>
             <span class="user-panel-increase-num">+32</span>
-            <img class="arrow-up-right" src="src/assets/images/arrow-up-right.png" alt="arrow-up-right">
+            <img class="arrow-up-right" src="@/assets/images/arrow-up-right.png" alt="arrow-up-right">
           </p>
         </div>
       </div>
       <div class="more-info">
-        <img class="more-info-img" src="src/assets/images/Other.png" alt="other">
+        <img class="more-info-img" src="@/assets/images/Other.png" alt="other">
       </div>
     </div>
   </header>
@@ -75,6 +77,10 @@ const navList = ref([
 .nav {
   height: 80px;
   background: $white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 .nav-container {
   max-width: 1440px;
