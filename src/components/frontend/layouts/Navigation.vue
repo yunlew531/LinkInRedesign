@@ -1,35 +1,34 @@
 <script setup>
 import { ref } from 'vue';
+import getImageUrl from '@/methods/getImageUrl.js';
 
 const navList = ref([
   {
     title: 'FEED',
-    name: 'feed',
+    fileName: 'feed',
     path: '/feed',
   },
   {
     title: 'NETWORK',
-    name: 'network',
+    fileName: 'network',
     path: '/network',
   },
   {
     title: 'JOBS',
-    name: 'jobs',
+    fileName: 'jobs',
     path: '/jobs',
   },
   {
     title: 'CHAT',
-    name: 'chat',
+    fileName: 'chat',
     path: '/chat',
   },
   {
     title: 'NOTICES',
-    name: 'notices',
+    fileName: 'notices',
     path: '/notices',
   },
 ]);
-
-const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, import.meta.url).href;
 </script>
 
 <template>
@@ -41,9 +40,10 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
         </router-link>
       </h1>
       <ul class="nav-list">
-        <li v-for="link in navList" :key="link.title">
+        <li v-for="link in navList" :key="link.title" class="nav-link">
           <router-link :to="link.path">
-            <img class="nav-link-img" :src="getImageUrl(link.name)" :alt="link.title">
+            <img :src="getImageUrl(link.fileName)" :alt="link.title">
+            <span>{{ link.title }}</span>
           </router-link>
         </li>
       </ul>
@@ -64,8 +64,9 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
           </p>
         </div>
       </div>
-      <div class="more-info">
-        <img class="more-info-img" src="@/assets/images/Other.png" alt="other">
+      <div class="other-btn">
+        <img src="@/assets/images/Other.png" alt="other">
+        <span>OTHER</span>
       </div>
     </div>
   </header>
@@ -81,6 +82,8 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
   top: 0;
   left: 0;
   right: 0;
+  z-index: 999;
+  border-bottom: 1px solid $white-400;
 }
 .nav-container {
   max-width: 1440px;
@@ -94,8 +97,13 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
 .logo-img {
   width: 46px;
   height: 46px;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.03);
+  }
 }
 .nav-list {
+  align-self: stretch;
   display: flex;
   border-right: 1px solid $white-100;
   border-left: 1px solid $white-100;
@@ -104,35 +112,72 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
     display: block;
   }
 }
-.nav-link-img, .more-info-img {
-  transition: 0.3s transform;
-  &:hover {
-    transform: translateY(-3px);
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90px;
+  > a {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    font-size: $fs-6;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    > img {
+      margin-bottom: 10px;
+    }
+    transition: 0.2s transform, color 0.2s;
+    &:hover {
+      transform: translateY(-3px);
+      color: $blue-300;
+    }
   }
 }
 .search-panel {
   flex-grow: 1;
   display: flex;
-  padding: 0 30px;
   align-items: center;
   border-right: 1px solid $white-100;
+  position: relative;
 }
 .search-img {
   width: 24px;
   height: 24px;
-  margin-right: 20px;
+  position: absolute;
+  left: 30px;
 }
 .search-input {
   flex-grow: 1;
   height: 80px;
+  font-size: $fs-4;
   border: none;
+  outline: 1px solid rgba($blue-300, 0);
+  background: transparent;
+  padding: 0 30px 0 70px;
+  transition: outline 0.2s;
+  &:focus-visible {
+    outline: 1px solid rgba($blue-300, 0.2);
+    box-shadow: 1px 1px 5px rgba($blue-300, 0.2);
+  }
 }
 .user-panel {
   width: 330px;
   display: flex;
   align-items: center;
-  padding: 0 30px;
   font-size: $fs-6;
+  cursor: pointer;
+  padding: 0 30px;
+  transition: color 0.2s;
+  &:hover {
+    color: $blue-200;
+    > .user-panel-photo {
+      border: 2px solid $blue-200;
+    }
+  }
 }
 .user-panel-content {
   display: flex;
@@ -148,6 +193,7 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
   width: 42px;
   height: 42px;
   margin-right: 15px;
+  border-radius: 100%;
 }
 .user-panel-name {
   font-weight: bold;
@@ -164,12 +210,27 @@ const getImageUrl = (name) => new URL(`../../../assets/images/${name}.png`, impo
   color: $gray-100;
   margin-right: 5px;
 }
-.more-info {
+.other-btn {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 90px;
   border-left: 1px solid $white-100;
   border-right: 1px solid $white-100;
   cursor: pointer;
-}
+  font-size: $fs-6;
+  font-weight: bold;
+  transition: transform 0.2s, color 0.2s;
+  > img {
+    margin-bottom: 5px;
+  }
+  &:hover {
+    transform: translateY(-3px);
+    color: $blue-300;
+  }
+  }
 .arrow-up-right {
   margin-left: 2px;
   display: inline-block;

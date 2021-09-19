@@ -18,35 +18,33 @@ const profileLinks = ref([
 </script>
 
 <template>
-  <section class="profile-body">
-    <div class="profile-nav">
+  <section class="profile-nav">
+    <div class="profile-nav-container">
       <router-link :to="link.path" exact-active-class="active"
-        v-for="link in profileLinks" :key="link.title" class="item-link">
+        v-for="link in profileLinks" :key="link.title" class="profile-nav-link">
         {{ link.title }}
       </router-link>
     </div>
-    <!-- <ul class="profile-nav">
-      <li v-for="link in profileLinks" :key="link.title" class="item-link">
-        <router-link :to="link.path" exact-active-class="active">{{ link.title }}</router-link>
-      </li>
-    </ul> -->
   </section>
 </template>
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
 
-.profile-body {
-  margin-top: 35px;
-}
 .profile-nav {
+  margin: 35px 0 20px;
+}
+.profile-nav-container {
   display: flex;
   border-bottom: 1px solid #E7E7E7;
+  height: 50px;
 }
-.item-link {
+.profile-nav-link {
   text-align: center;
   background: $white;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 240px;
   color: inherit;
   text-decoration: none;
@@ -54,10 +52,11 @@ const profileLinks = ref([
   padding: 12px 0;
   font-weight: bold;
   font-size: $fs-6;
-  transition: background-color 0.2s;
   border: 1px solid #E7E7E7;
   border-bottom: none;
   margin-right: -1px;
+  margin-top: 10px;
+  transition: background-color 0.2s 0.5s, margin-top 0.3s ease-in, color 0.2s 0.5s;
   &:last-of-type {
     border-radius: 0 4px 0 0;
   }
@@ -66,12 +65,12 @@ const profileLinks = ref([
   }
   &.active {
     background: $blue-200;
-    height: 50px;
-    line-height: 24px;
-    transform: translateY(-10px);
-    margin-bottom: -10px;
+    margin-top: 0;
     color: $white;
     border-radius: 4px 4px 0 0;
+    &:hover {
+      color: $white;
+    }
   }
 }
 </style>

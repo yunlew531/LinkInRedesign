@@ -1,19 +1,54 @@
 
 <script setup>
 import { ref } from 'vue';
-import ProfileContent from '@/components/frontend/Profile/ProfileContent.vue';
+import ProfileNav from '@/components/frontend/Profile/ProfileNav.vue';
+import getImageUrl from '@/methods/getImageUrl.js';
 
-const asideItems = ref([
-    {
-      title: 'your dashboard',
-    },
-    {
-      title: 'visitors',
-    },
-    {
-      title: 'You may like these courses',
-    },
-  ]);
+const visitors = ref([
+  {
+    name: 'Darlene Black',
+    fileName: 'visitor-1',
+    description: 'HR-manager, 10 000 connec...',
+  },
+  {
+    name: 'Theresa Steward',
+    fileName: 'visitor-2',
+    description: 'iOS developer',
+  },
+  {
+    name: 'Brandon Wilson',
+    fileName: 'visitor-3',
+    description: 'Senior UX designer',
+  },
+  {
+    name: 'Kyle Fisher',
+    fileName: 'visitor-4',
+    description: 'Product designer at Com...',
+  },
+  {
+    name: 'Audrey Alexander',
+    fileName: 'visitor-5',
+    description: 'Team lead at Google',
+  },
+]);
+
+const courses = ref([
+  {
+    title: 'UX Foundations: Prototyping',
+    fileName: 'courses-may-like-1',
+    viewers: '27959',
+  },
+  {
+    title: 'Designing with Adobe XD and pro',
+    fileName: 'courses-may-like-2',
+    viewers: '9122',
+  },
+  {
+    title: 'UX Foundations: Styles and GUIs',
+    fileName: 'courses-may-like-3',
+    viewers: '13858',
+  },
+]);
 </script>
 
 <template>
@@ -21,20 +56,33 @@ const asideItems = ref([
     <div class="profile-main">
       <section class="profile-header">
         <div class="profile-cover">
-
+          <div class="profile-edit-btns-group">
+            <button type="button">
+              <img src="@/assets/images/upload.png" alt="upload">
+            </button>
+            <button type="button">edit profile</button>
+            <button type="button">
+              <img src="@/assets/images/more-horizontal.png" alt="more">
+            </button>
+          </div>
         </div>
         <div class="profile-header-content">
-          <img class="user-photo" src="@/assets/images/user-1-big.png" alt="user">
+          <div class="user-photo">
+            <div class="user-photo-hover">
+              <img src="@/assets/images/camera.png" alt="camera">
+            </div>
+            <img src="@/assets/images/user-1-big.png" alt="Dmitry Kargaev">
+          </div>
           <div>
             <p class="user-content">
               <span class="user-name-group">
                 <span class="user-name">Dmitry Kargaev</span>
                 <img class="user-name-logo" src="@/assets/images/in-logo.png" alt="LinkIned logo">
               </span>
-              <span class="user-position-group">
+              <router-link to="profile" class="user-position-group">
                 <img src="@/assets/images/Vector.png" alt="position mark">
                 <span>Saint Petersburg, Russian Federation</span>
-              </span>
+              </router-link>
             </p>
             <p class="user-description">Freelance UX/UI designer, 80+ projects in web design, mobile apps
                 (iOS & android) and creative projects. Open to offers.</p>
@@ -45,13 +93,57 @@ const asideItems = ref([
           </div>
         </div>
       </section>
-      <ProfileContent />
+      <ProfileNav />
       <router-view />
     </div>
     <aside class="aside">
       <ul>
-        <li v-for="item in asideItems" :key="item.title" class="aside-item">
-          <h3 class="aside-item-title">{{ item.title }}</h3>
+        <li class="aside-card">
+          <div class="aside-card-header">
+            <h3 class="aside-card-title">your dashboard</h3>
+            <router-link to="/profile">go to stats</router-link>
+          </div>
+          <div class="aside-card-body">
+            <span class="dashboard-num">367</span>
+            <h4 class="dashboard-title">views today</h4>
+            <span class="dashboard-num">15</span>
+            <h4 class="dashboard-title">posts views</h4>
+            <span class="dashboard-num">9</span>
+            <h4 class="dashboard-title">search appereances</h4>
+          </div>
+        </li>
+        <li class="aside-card">
+          <div class="aside-card-header">
+            <h3 class="aside-card-title">visitors</h3>
+            <router-link to="/profile">view all</router-link>
+          </div>
+          <ul>
+            <li v-for="visitor in visitors" :key="visitor.fileName" class="visitor-card">
+              <router-link to="/profile">
+                <img :src="getImageUrl(visitor.fileName)" :alt="visitor.name" class="visitor-img">
+                <p>{{ visitor.description }}</p>
+              </router-link>
+            </li>
+          </ul>
+        </li>
+        <li class="aside-card">
+          <div class="aside-card-header">
+            <h3 class="aside-card-title">You may like these courses</h3>
+          </div>
+          <ul>
+            <li v-for="course in courses" :key="courses.fileName" class="course-card">
+              <router-link to="/profile" class="course-link">
+                <div class="course-img-group">
+                  <img src="@/assets/images/play.png" alt="play video" class="play-video-btn">
+                  <img :src="getImageUrl(course.fileName)" :alt="course.title" class="course-img">
+                </div>
+                <div>
+                  <h2 class="course-title">{{ course.title }}</h2>
+                  <span class="course-viewers">{{ course.viewers }} viewers</span>
+                </div>
+              </router-link>
+            </li>
+          </ul>
         </li>
       </ul>
     </aside>
@@ -65,6 +157,7 @@ const asideItems = ref([
   display: flex;
 }
 .profile-main {
+  max-width: 850px;
   margin-right: 40px;
 }
 .profile-header {
@@ -77,29 +170,74 @@ const asideItems = ref([
   background: $white;
   padding: 25px 45px 35px;
 }
-.aside {
-  width: 360px;
-}
-.aside-item {
-  background: $white;
-  border-radius: 4px;
-  margin-bottom: 20px;
-  padding: 25px 30px;
-}
-.aside-item-title {
-  text-transform: uppercase;
-  font-size: $fs-6;
-}
 .profile-cover {
   height: 180px;
   background: url('@/assets/images/Rectangle 3.png') no-repeat center;
   background-size: cover;
+  padding: 20px 30px;
+}
+.profile-edit-btns-group {
+  display: flex;
+  > button {
+    background: $white;
+    padding: 8px 12px;
+    border: none;
+    box-shadow: 0px 10px 30px rgba(113, 123, 133, 0.05);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: color 0.2s, transform 0.2s;
+    margin-right: 10px;
+    &:hover {
+      transform: translateY(-2px);
+      color: $blue-200;
+    }
+    &:first-child {
+      margin-right: auto;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 .user-photo {
+  flex-shrink: 0;
   width: 200px;
   height: 200px;
+  border: 10px solid $white;
+  border-radius: 100%;
   transform: translateY(-50px);
   margin: 0 30px -50px 0;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  > img {
+    height: 100%;
+  }
+  &:hover {
+    > .user-photo-hover {
+      opacity: 0.5;
+    }
+  }
+}
+.user-photo-hover {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: $dark-100;
+  border-radius: 100%;
+  transition: opacity 0.2s;
+  > img {
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
 }
 .user-content {
   display: flex;
@@ -122,6 +260,11 @@ const asideItems = ref([
 .user-position-group {
   display: flex;
   align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: $blue-300;
+  filter: brightness(1);
+  transition: filter 0.2s;
   > img {
     width: 15px;
     height: 15px;
@@ -130,10 +273,13 @@ const asideItems = ref([
   > span {
     font-size: $fs-6;
   }
+  &:hover {
+    filter: brightness(1.3);
+  }
 }
 .user-description {
   margin-top: 10px;
-  line-height: 150%;
+  line-height: 1.5;
 }
 .btns-group {
   margin-top: 15px;
@@ -165,5 +311,117 @@ const asideItems = ref([
     background: $blue-200;
     color: $white;
   }
+}
+.aside {
+  width: 360px;
+}
+.aside-card {
+  background: $white;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 25px 30px;
+}
+.aside-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $white-100;
+  padding-bottom: 20px;
+  > a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: $blue-400;
+    font-size: $fs-7;
+    font-weight: bold;
+    transition: transform 0.2s, filter 0.2s;
+    &:hover {
+      filter: brightness(1.3);
+      transform: translateX(10px) skewX(-10deg);
+    }
+  }
+}
+.aside-card-title {
+  text-transform: uppercase;
+  font-size: $fs-6;
+  font-weight: bold;
+}
+.dashboard-num {
+  display: block;
+  font-size: $fs-1;
+  color: $blue-400;
+  margin-top: 20px;
+}
+.dashboard-title {
+  font-weight: normal;
+  margin-top: 10px;
+}
+.visitor-card {
+  > a {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s, transform 0.2s;
+    &:nth-last-child(1) {
+      margin-bottom: 0;
+    }
+    &:hover {
+      color: $blue-400;
+      transform: translateX(3px);
+    }
+  }
+}
+.visitor-img {
+  margin-right: 15px;
+}
+.course-card {
+  margin: 15px 0;
+  &:nth-child(1) {
+    margin-bottom: 0;
+  }
+}
+.course-link {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+  &:hover {
+    color: $blue-200;
+    transform: translateX(3px);
+    .play-video-btn {
+      transform: rotate3d(0, 1, 0, 180deg) translateX(50%) translateY(-50%);
+    }
+  }
+}
+.course-title {
+  margin-bottom: 5px;
+}
+.course-img {
+  height: 100%;
+  border-radius: 5px;
+}
+.course-viewers {
+  font-size: $fs-6;
+  color: rgba($dark-100, 0.5);
+  font-weight: bold;
+}
+.course-img-group {
+  min-width: 80px;
+  height: 52px;
+  border-radius: 5px;
+  margin-right: 15px;
+  position: relative;
+}
+.play-video-btn {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 1;
+  transition: transform 1s;
 }
 </style>

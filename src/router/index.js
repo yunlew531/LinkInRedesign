@@ -1,19 +1,18 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Index from '@/views/frontend/Index.vue';
-import Profile from '@/views/frontend/Profile.vue';
 
-const history = createWebHistory();
+const history = createWebHashHistory('/LinkInRedesign/');
 const routes = [
   {
     path: '/',
     name: 'Index',
     component: Index,
-    redirect: 'profile',
+    redirect: '/profile',
     children: [
       {
         path: 'profile',
         name: 'Profile',
-        component: Profile,
+        component: () => import('@/views/frontend/Profile.vue'),
         children: [
           {
             path: '',
