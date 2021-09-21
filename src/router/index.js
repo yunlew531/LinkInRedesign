@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Index from '@/views/frontend/Index.vue';
+import Index from '@/views/Index.vue';
 
 const history = createWebHashHistory('/LinkInRedesign/');
 const routes = [
@@ -12,27 +12,57 @@ const routes = [
       {
         path: 'profile',
         name: 'Profile',
-        component: () => import('@/views/frontend/Profile.vue'),
+        component: () => import('@/views/Index/Profile.vue'),
         children: [
           {
             path: '',
             name: 'ProfileMain',
-            component: () => import('@/views/frontend/Profile/ProfileMain.vue'),
+            component: () => import('@/views/Index/Profile/ProfileMain.vue'),
           },
           {
             path: 'interests',
             name: 'ProfileInterests',
-            component:  () => import('@/views/frontend/Profile/ProfileInterests.vue'),
+            component:  () => import('@/views/Index/Profile/ProfileInterests.vue'),
           },
           {
             path: 'articles',
             name: 'ProfileArticles',
-            component:  () => import('@/views/frontend/Profile/ProfileArticles.vue'),
+            component:  () => import('@/views/Index/Profile/ProfileArticles.vue'),
           }
         ],
       },
+      {
+        path: '/@:uid',
+        name: 'User',
+        redirect: (to) => `/@${to.params.uid}/profile`,
+        component: () => import('@/views/Index/Profile.vue'),
+        children: [
+          {
+            path: 'profile',
+            name: 'UserProfileMain',
+            component: () => import('@/views/Index/Profile/ProfileMain.vue'),
+          },
+          {
+            path: 'profile/interests',
+            name: 'UserProfileInterests',
+            component:  () => import('@/views/Index/Profile/ProfileInterests.vue'),
+          },
+          {
+            path: 'profile/articles',
+            name: 'UserProfileArticles',
+            component:  () => import('@/views/Index/Profile/ProfileArticles.vue'),
+          }
+        ],
+      },
+      {
+        path: 'feed',
+        name: 'Feed',
+        component: () => import('@/views/Index/Feed.vue'),
+      },
     ],
   },
+  
+  { path: "/*", redirect: "/"},
 ];
 
 export default createRouter({ history, routes });

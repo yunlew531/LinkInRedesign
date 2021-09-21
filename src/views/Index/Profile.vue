@@ -1,7 +1,6 @@
-
 <script setup>
 import { ref } from 'vue';
-import ProfileNav from '@/components/frontend/Profile/ProfileNav.vue';
+import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import getImageUrl from '@/methods/getImageUrl.js';
 
 const visitors = ref([
@@ -52,7 +51,7 @@ const courses = ref([
 </script>
 
 <template>
-  <div class="profile-panel">
+  <div class="profile-container">
     <div class="profile-main">
       <section class="profile-header">
         <div class="profile-cover">
@@ -79,7 +78,7 @@ const courses = ref([
                 <span class="user-name">Dmitry Kargaev</span>
                 <img class="user-name-logo" src="@/assets/images/in-logo.png" alt="LinkIned logo">
               </span>
-              <router-link to="profile" class="user-position-group">
+              <router-link to="/profile" class="user-position-group">
                 <img src="@/assets/images/Vector.png" alt="position mark">
                 <span>Saint Petersburg, Russian Federation</span>
               </router-link>
@@ -153,11 +152,11 @@ const courses = ref([
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
 
-.profile-panel {
+.profile-container {
   display: flex;
 }
 .profile-main {
-  max-width: 850px;
+  flex-grow: 1;
   margin-right: 40px;
 }
 .profile-header {
@@ -313,7 +312,8 @@ const courses = ref([
   }
 }
 .aside {
-  width: 360px;
+  flex-shrink: 0;
+  width: 290px;
 }
 .aside-card {
   background: $white;

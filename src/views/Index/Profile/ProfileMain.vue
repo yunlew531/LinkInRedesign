@@ -243,7 +243,7 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
   }
   &:hover {
     color: $blue-300;
-    box-shadow: 1px 1px 3px rgba($blue-300, 0.3);
+    box-shadow: 1px 1px 30px rgba($blue-300, 0.1);
   }
 }
 .skill-card-title {

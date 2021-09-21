@@ -41,8 +41,9 @@ const navList = ref([
       </h1>
       <ul class="nav-list">
         <li v-for="link in navList" :key="link.title" class="nav-link">
-          <router-link :to="link.path">
-            <img :src="getImageUrl(link.fileName)" :alt="link.title">
+          <router-link :to="link.path" active-class="active" v-slot="{ isActive }">
+            <img :src="getImageUrl(`${link.fileName}${isActive ? '-active' : ''}`)"
+              :alt="link.title">
             <span>{{ link.title }}</span>
           </router-link>
         </li>
@@ -60,7 +61,8 @@ const navList = ref([
           <p>
             <span class="user-panel-view-num">367 views today</span>
             <span class="user-panel-increase-num">+32</span>
-            <img class="arrow-up-right" src="@/assets/images/arrow-up-right.png" alt="arrow-up-right">
+            <img class="arrow-up-right" src="@/assets/images/arrow-up-right.png"
+              alt="arrow-up-right">
           </p>
         </div>
       </div>
@@ -108,9 +110,6 @@ const navList = ref([
   border-right: 1px solid $white-100;
   border-left: 1px solid $white-100;
   padding: 0 10px;
-  > a {
-    display: block;
-  }
 }
 .nav-link {
   display: flex;
@@ -135,6 +134,10 @@ const navList = ref([
       transform: translateY(-3px);
       color: $blue-300;
     }
+    &.active {
+      transform: translateY(0);
+      color: $blue-300;
+    }
   }
 }
 .search-panel {
@@ -152,15 +155,17 @@ const navList = ref([
 }
 .search-input {
   flex-grow: 1;
-  height: 80px;
+  height: 76px;
   font-size: $fs-4;
   border: none;
-  outline: 1px solid rgba($blue-300, 0);
+  outline: 2px solid rgba($blue-300, 0);
   background: transparent;
   padding: 0 30px 0 70px;
   transition: outline 0.2s;
+  transform: translateY(2px);
+  caret-color: $blue-300;
   &:focus-visible {
-    outline: 1px solid rgba($blue-300, 0.2);
+    outline: 2px solid rgba($blue-300, 0.5);
     box-shadow: 1px 1px 5px rgba($blue-300, 0.2);
   }
 }

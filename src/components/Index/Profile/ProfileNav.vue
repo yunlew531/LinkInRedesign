@@ -1,18 +1,22 @@
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+
+const { uid } = route.params;
 const profileLinks = ref([
   {
     title: 'Profile',
-    path: '/profile',
+    path: `${uid ? `/@${uid}` : '' }/profile`,
   },
   {
     title: 'Activity & interests',
-    path: '/profile/interests',
+    path: `${uid ? `/@${uid}` : '' }/profile/interests`,
   },
   {
     title: 'Articles (3)',
-    path: '/profile/articles',
+    path: `${uid ? `/@${uid}` : '' }/profile/articles`,
   },
 ]);
 </script>

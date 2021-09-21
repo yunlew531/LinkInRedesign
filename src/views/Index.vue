@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import Navigation from '@/components/frontend/layouts/Navigation.vue';
-import Footer from '@/components/frontend/layouts/Footer.vue';
+import Navigation from '@/components/Index/Navigation.vue';
+import Footer from '@/components/Index/Footer.vue';
 </script>
 
 <style lang="scss" scoped>
