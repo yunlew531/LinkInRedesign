@@ -114,15 +114,12 @@ const navLinks = ref([
 .footer-nav-list {
   display: flex;
   flex-wrap: wrap;
+  margin: 0 -2% -15px 0;
 }
 .nav-link {
-  width: 32%;
-  margin-right: 2%;
+  width: 31.333333%;
+  margin: 0 2% 15px 0;
   font-size: $fs-6;
-  margin-bottom: 15px;
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
   > a {
     display: inline-block;
     text-decoration: none;

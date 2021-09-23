@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import getImageUrl from '@/methods/getImageUrl.js';
+import getImageUrl from '@/mixins/getImageUrl.js';
 
 const projectsList = ref([
   {
@@ -204,20 +204,14 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
 .project-list {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 25px;
-}
-.project-img {
-  width: 100%;
-  margin-bottom: 15px;
+  margin: 0 -2% 25px 0;
 }
 .project-card {
-  width: 32%;
+  width: 31.333333%;
   margin-right: 2%;
   transition: transform 0.2s, color 0.2s;
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
   > a {
+    display: block;
     color: inherit;
     text-decoration: none;
   }
@@ -226,21 +220,23 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
     color: $blue-400;
   }
 }
+.project-img {
+  width: 100%;
+  margin-bottom: 15px;
+}
 .skills-list {
   display: flex;
   flex-wrap: wrap;
+  margin-right: -2%;
 }
 .skill-card {
-  width: 32%;
+  width: 31.333333%;
   margin-right: 2%;
   border: 1px solid $white-100;
   border-radius: 6px;
   padding: 15px 20px;
   position: relative;
   transition: color 0.2s, box-shadow 0.2s;
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
   &:hover {
     color: $blue-300;
     box-shadow: 1px 1px 30px rgba($blue-300, 0.1);

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import getImageUrl from '@/methods/getImageUrl.js';
+import getImageUrl from '@/mixins/getImageUrl.js';
 
 const navList = ref([
   {

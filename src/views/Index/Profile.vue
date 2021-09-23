@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
-import getImageUrl from '@/methods/getImageUrl.js';
+import getImageUrl from '@/mixins/getImageUrl.js';
 
 const visitors = ref([
   {
@@ -116,7 +116,7 @@ const courses = ref([
             <h3 class="aside-card-title">visitors</h3>
             <router-link to="/profile">view all</router-link>
           </div>
-          <ul>
+          <ul class="visitor-cards-list">
             <li v-for="visitor in visitors" :key="visitor.fileName" class="visitor-card">
               <router-link to="/profile">
                 <img :src="getImageUrl(visitor.fileName)" :alt="visitor.name" class="visitor-img">
@@ -129,7 +129,7 @@ const courses = ref([
           <div class="aside-card-header">
             <h3 class="aside-card-title">You may like these courses</h3>
           </div>
-          <ul>
+          <ul class="course-cards-list">
             <li v-for="course in courses" :key="courses.fileName" class="course-card">
               <router-link to="/profile" class="course-link">
                 <div class="course-img-group">
@@ -355,6 +355,9 @@ const courses = ref([
   font-weight: normal;
   margin-top: 10px;
 }
+.visitor-cards-list {
+  margin-bottom: -15px;
+}
 .visitor-card {
   > a {
     display: flex;
@@ -363,9 +366,6 @@ const courses = ref([
     text-decoration: none;
     color: inherit;
     transition: color 0.2s, transform 0.2s;
-    &:nth-last-child(1) {
-      margin-bottom: 0;
-    }
     &:hover {
       color: $blue-400;
       transform: translateX(3px);
@@ -375,11 +375,11 @@ const courses = ref([
 .visitor-img {
   margin-right: 15px;
 }
+.course-cards-list {
+  margin-bottom: -15px;
+}
 .course-card {
   margin: 15px 0;
-  &:nth-child(1) {
-    margin-bottom: 0;
-  }
 }
 .course-link {
   display: flex;

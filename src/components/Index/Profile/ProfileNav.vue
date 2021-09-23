@@ -8,15 +8,15 @@ const { uid } = route.params;
 const profileLinks = ref([
   {
     title: 'Profile',
-    path: `${uid ? `/@${uid}` : '' }/profile`,
+    path: `${ uid ? `/@${uid}` : '' }/profile`,
   },
   {
     title: 'Activity & interests',
-    path: `${uid ? `/@${uid}` : '' }/profile/interests`,
+    path: `${ uid ? `/@${uid}` : '' }/profile/interests`,
   },
   {
     title: 'Articles (3)',
-    path: `${uid ? `/@${uid}` : '' }/profile/articles`,
+    path: `${ uid ? `/@${uid}` : '' }/profile/articles`,
   },
 ]);
 </script>
