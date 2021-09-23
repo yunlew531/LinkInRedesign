@@ -32,7 +32,7 @@ const routes = [
         ],
       },
       {
-        path: '/@:uid',
+        path: '@:uid',
         name: 'User',
         redirect: (to) => `/@${to.params.uid}/profile`,
         component: () => import('@/views/Index/Profile.vue'),
@@ -58,6 +58,19 @@ const routes = [
         path: 'feed',
         name: 'Feed',
         component: () => import('@/views/Index/Feed.vue'),
+      },
+      {
+        path: 'network',
+        name: 'Network',
+        component: () => import('@/views/Index/Network.vue'),
+        redirect: '/network/invitations',
+        children: [
+          {
+            path: 'invitations',
+            name: 'Invitations',
+            component:  () => import('@/views/Index/Network/Invitations.vue'),
+          }
+        ],
       },
     ],
   },

@@ -293,10 +293,13 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
 .experience-card {
   display: flex;
   border-bottom: 1px solid $white-100;
-  padding-bottom: 30px;
-  margin-top: 20px;
-  &:nth-last-of-type(1) {
+  padding: 25px 0;
+  &:first-child {
+    padding-top: 0;
+  }
+  &:last-child {
     border-bottom: none;
+    padding-bottom: 0;
   }
 }
 .experience-card-img {

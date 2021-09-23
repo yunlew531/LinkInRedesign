@@ -53,7 +53,6 @@ const profileLinks = ref([
   color: inherit;
   text-decoration: none;
   text-transform: uppercase;
-  padding: 12px 0;
   font-weight: bold;
   font-size: $fs-6;
   border: 1px solid #E7E7E7;

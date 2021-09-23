@@ -60,7 +60,7 @@ const handleBtnsShow = (e) => {
 
 <template>
   <div class="feed-container">
-    <div class="feed-main">
+    <main class="feed-main">
       <section class="new-post">
         <div class="new-post-header">
           <h3>new post</h3>
@@ -94,6 +94,9 @@ const handleBtnsShow = (e) => {
               <ul>
                 <li>
                   <button type="button">delete</button>
+                </li>
+                <li>
+                  <button type="button">收藏</button>
                 </li>
               </ul>
             </div>
@@ -135,7 +138,7 @@ const handleBtnsShow = (e) => {
           </ul>
         </li>
       </ul>
-    </div>
+    </main>
     <aside class="aside">
       <ul>
         <li class="aside-card">
@@ -326,6 +329,7 @@ const handleBtnsShow = (e) => {
 }
 .card-btns-group {
   position: relative;
+  text-align: center;
   > ul {
     background: transparent !important;
     visibility: hidden;
@@ -338,15 +342,14 @@ const handleBtnsShow = (e) => {
     transition: visibility 0.2s, opacity 0.2s;
     transform: translateY(100%);
     > li {
-      border: 1px rgba($gray-100, 0.2) solid;
-      background: $blue-200;
+      background: rgba($blue-200, 0.9);
       cursor: pointer;
-      margin-top: -1px;
+      border-bottom: $white-400 1px solid;
       &:hover {
-        background: rgba($blue-200, 0.9);
+        background: rgba($blue-200, 0.8);
       }
       &:active {
-        background: $blue-200;
+        background: rgba($blue-200, 1);
       }
       &:first-child {
         margin-top: 0;
@@ -356,6 +359,7 @@ const handleBtnsShow = (e) => {
       &:last-child {
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
+        border-bottom: none;
       }
       > button {
         font-weight: bold;

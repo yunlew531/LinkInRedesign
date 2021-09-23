@@ -52,7 +52,7 @@ const courses = ref([
 
 <template>
   <div class="profile-container">
-    <div class="profile-main">
+    <main class="profile-main">
       <section class="profile-header">
         <div class="profile-cover">
           <div class="profile-edit-btns-group">
@@ -94,7 +94,7 @@ const courses = ref([
       </section>
       <ProfileNav />
       <router-view />
-    </div>
+    </main>
     <aside class="aside">
       <ul>
         <li class="aside-card">
