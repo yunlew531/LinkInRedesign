@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineAsyncComponent } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import dayjs from '@/mixins/dayjs.js';
 
@@ -7,8 +7,6 @@ const ReceivedConnections = defineAsyncComponent(() =>
   import('@/components/Index/Network/Invitations/ReceivedConnections.vue'));
 const SentConnections = defineAsyncComponent(() =>
   import('@/components/Index/Network/Invitations/SentConnections.vue'));
-
-const currentDisplay = ref('Received');
 
 const recentUsers = ref([
   {
@@ -26,21 +24,56 @@ const recentUsers = ref([
     connect_time: 1632426180,
   },
 ]);
+
+const nextDisplay = ref('');
+const currentDisplay = ref('ReceivedConnections');
+const currentComponent =  computed(() => {
+  let component = null;
+  switch(currentDisplay.value) {
+    case 'ReceivedConnections':
+      component = ReceivedConnections;
+      break;
+    case 'SentConnections':
+      component = SentConnections;
+      break;
+  }
+  return component;
+})
+
+const handleComponent = (component) => {
+  currentDisplay.value = '';
+  nextDisplay.value = component;
+};
+
+let height = 0;
+const fillHeightEl = ref(null);
+const fillHeight = (el) => {
+  if (el) {
+    height = el.clientHeight || height;
+  } else height = 0;
+
+  if(!el.clientHeight || !el) fillHeightEl.value.style.height = `${height}px`
+};
 </script>
 
 <template>
   <div class="btns-container">
     <button type="button" class="page-btn"
-      :class="{ active: currentDisplay === 'Received' }"
-      @click="currentDisplay = 'Received'">Received
+      :class="{ active: currentDisplay === 'ReceivedConnections' }"
+      @click="handleComponent('ReceivedConnections')">Received
     </button>
     <button type="button" class="page-btn"
-      :class="{ active: currentDisplay === 'Sent' }"
-      @click="currentDisplay = 'Sent'">Sent
+      :class="{ active: currentDisplay === 'SentConnections' }"
+      @click="handleComponent('SentConnections')">Sent
     </button>
   </div>
-  <ReceivedConnections v-if="currentDisplay === 'Received'" />
-  <SentConnections v-if="currentDisplay === 'Sent'" />
+  <div ref="fillHeightEl"></div>
+  <transition name="fade" mode="out-in" 
+    @before-enter="fillHeight(0)"
+    @before-leave="fillHeight($event)"
+    @after-leave="fillHeight($event), currentDisplay = nextDisplay">
+    <component :is="currentComponent" />
+  </transition>
   <div class="divide">
     <span class="divide-text">recent connections</span>
   </div>
@@ -92,7 +125,7 @@ const recentUsers = ref([
   border-bottom: none;
   cursor: pointer;
   margin: 10px 0 0 -1px;
-  transition: margin-top 0.3s ease-in, color 0.2s 0.5s, background-color 0.2s 0.5s;
+  transition: margin-top 0.3s ease-in, color 0.2s 0.5s, background-color 0.2s 0.5s, border-radius 0.5s;
   &:first-of-type {
     margin-left: 0;
     border-radius: 8px 0 0 0;
@@ -104,9 +137,10 @@ const recentUsers = ref([
     margin-top: 0;
     color: $white;
     background: $blue-400;
+    border-radius: 8px 8px 0 0;
   }
 }
-.divide {
+  .divide {
   width: 100%;
   height: 1px;
   border-bottom: 1px solid #E7E7E7;
@@ -175,5 +209,24 @@ const recentUsers = ref([
   align-self: end;
   font-size: $fs-6;
   color: rgba($dark-100, 0.3);
+}
+.fade-enter-active,  .fade-leave-active{
+  transition: opacity 0.5s ease-in, transform 0.5s;
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.fade-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+.fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

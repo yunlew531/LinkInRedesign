@@ -23,29 +23,32 @@ const receivedUsers = ref([
 </script>
 
 <template>
-  <div class="divide">
-    <span class="divide-text">
-      you have <span class="emphasize">{{ receivedUsers.length }} request wait for reply</span>
-    </span>
+  <div data-name="sent-connections">
+    <div style="height: 1px; margin-bottom: -1px;"></div>
+    <div class="divide">
+      <span class="divide-text">
+        you have <span class="emphasize">{{ receivedUsers.length }} request wait for reply</span>
+      </span>
+    </div>
+    <ul>
+      <li v-for="user in receivedUsers" :key="user.uid" class="sent-card">
+        <router-link :to="`/@${user.uid}`" class="sent-card-img-link">
+          <img :src="getImageUrl(user.img)" :alt="user.name" class="sent-card-img">
+        </router-link>
+        <div class="sent-card-contents">
+          <h3 class="sent-card-name">
+            <router-link :to="`/@${user.uid}`">{{ user.name }}</router-link></h3>
+          <h4 class="sent-card-profession">{{ user.profession }}</h4>
+          <button type="button" class="sent-card-connections-qty">{{ user.connections_qty }} connections</button>
+        </div>
+        <div class="sent-card-content">
+          <h3>YOUR MESSAGE</h3>
+          <p>{{ user.content || 'empty' }}</p>
+        </div>
+        <button type="button" class="sent-card-cancel-btn">cancel</button>
+      </li>
+    </ul>
   </div>
-  <ul>
-    <li v-for="user in receivedUsers" :key="user.uid" class="sent-card">
-      <router-link :to="`/@${user.uid}`" class="sent-card-img-link">
-        <img :src="getImageUrl(user.img)" :alt="user.name" class="sent-card-img">
-      </router-link>
-      <div class="sent-card-contents">
-        <h3 class="sent-card-name">
-          <router-link :to="`/@${user.uid}`">{{ user.name }}</router-link></h3>
-        <h4 class="sent-card-profession">{{ user.profession }}</h4>
-        <button type="button" class="sent-card-connections-qty">{{ user.connections_qty }} connections</button>
-      </div>
-      <div class="sent-card-content">
-        <h3>YOUR MESSAGE</h3>
-        <p>{{ user.content || 'empty' }}</p>
-      </div>
-      <button type="button" class="sent-card-cancel-btn">cancel</button>
-    </li>
-  </ul>
 </template>
 
 <style lang="scss" scoped>

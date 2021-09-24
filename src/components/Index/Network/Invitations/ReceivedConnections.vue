@@ -23,30 +23,33 @@ const receivedUsers = ref([
 </script>
 
 <template>
-  <div class="divide">
-    <span class="divide-text">
-      you have <span class="emphasize">{{ receivedUsers.length }} new connections</span>
-    </span>
+  <div data-name="received-connections">
+    <div style="height: 1px; margin-bottom: -1px;"></div>
+    <div class="divide">
+      <span class="divide-text">
+        you have <span class="emphasize">{{ receivedUsers.length }} new connections</span>
+      </span>
+    </div>
+    <ul>
+      <li v-for="user in receivedUsers" :key="user.uid" class="received-card">
+        <router-link :to="`/@${user.uid}`" class="received-card-img-link">
+          <img :src="getImageUrl(user.img)" :alt="user.name" class="received-card-img">
+        </router-link>
+        <div class="received-card-contents">
+          <h3 class="received-card-name">
+            <router-link :to="`/@${user.uid}`">{{ user.name }}</router-link>
+          </h3>
+          <h4 class="received-card-profession">{{ user.profession }}</h4>
+          <button type="button" class="received-card-connections-qty">
+            {{ user.connections_qty }} connections
+          </button>
+        </div>
+        <p class="received-card-content">{{ user.content }}</p>
+        <button type="button" class="received-card-accept-btn">accept</button>
+        <button type="button" class="received-card-decline-btn">decline</button>
+      </li>
+    </ul>
   </div>
-  <ul>
-    <li v-for="user in receivedUsers" :key="user.uid" class="received-card">
-      <router-link :to="`/@${user.uid}`" class="received-card-img-link">
-        <img :src="getImageUrl(user.img)" :alt="user.name" class="received-card-img">
-      </router-link>
-      <div class="received-card-contents">
-        <h3 class="received-card-name">
-          <router-link :to="`/@${user.uid}`">{{ user.name }}</router-link>
-        </h3>
-        <h4 class="received-card-profession">{{ user.profession }}</h4>
-        <button type="button" class="received-card-connections-qty">
-          {{ user.connections_qty }} connections
-        </button>
-      </div>
-      <p class="received-card-content">{{ user.content }}</p>
-      <button type="button" class="received-card-accept-btn">accept</button>
-      <button type="button" class="received-card-decline-btn">decline</button>
-    </li>
-  </ul>
 </template>
 
 <style lang="scss" scoped>

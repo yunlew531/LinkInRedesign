@@ -52,7 +52,7 @@ const navList = ref([
         <img class="search-img" src="@/assets/images/search.png" alt="search">
         <input class="search-input" type="text" placeholder="Search">
       </div>
-      <div class="user-panel">
+      <router-link to="/" class="user-panel">
         <img class="user-panel-photo" src="@/assets/images/user-1.png" alt="D. Kargave">
         <div class="user-panel-content">
           <p>
@@ -65,7 +65,7 @@ const navList = ref([
               alt="arrow-up-right">
           </p>
         </div>
-      </div>
+      </router-link>
       <div class="other-btn">
         <img src="@/assets/images/Other.png" alt="other">
         <span>OTHER</span>
@@ -91,9 +91,11 @@ const navList = ref([
   max-width: 1440px;
   margin: auto;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 .logo-title {
+  display: flex;
+  align-items: center;
   padding: 0 40px;
 }
 .logo-img {
@@ -180,7 +182,7 @@ const navList = ref([
   &:hover {
     color: $blue-200;
     > .user-panel-photo {
-      border: 2px solid $blue-200;
+      filter: brightness(0.8);
     }
   }
 }
@@ -199,6 +201,7 @@ const navList = ref([
   height: 42px;
   margin-right: 15px;
   border-radius: 100%;
+  transition: filter 0.2s;
 }
 .user-panel-name {
   font-weight: bold;
