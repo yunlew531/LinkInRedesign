@@ -72,6 +72,11 @@ const routes = [
           }
         ],
       },
+      {
+        path: 'jobs',
+        name: 'Jobs',
+        components: () => import('@/views/Index/Jobs.vue'),
+      },
     ],
   },
   
