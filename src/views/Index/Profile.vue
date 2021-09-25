@@ -62,7 +62,7 @@ const courses = ref([
             </button>
             <button type="button">edit profile</button>
             <button type="button">
-              <img src="@/assets/images/more-horizontal.png" alt="more">
+              <img src="@/assets/images/more-horizontal.png" alt="more infomation">
             </button>
           </div>
         </div>
@@ -98,7 +98,7 @@ const courses = ref([
     </main>
     <aside class="aside">
       <ul>
-        <li>
+        <li class="aside-card">
           <AsideCard title="your dashboard" :headLink="{ title: 'go to stats', path: '/stats' }">
             <template v-slot:card-body>
               <span class="dashboard-num">367</span>
@@ -110,7 +110,7 @@ const courses = ref([
             </template>
           </AsideCard>
         </li>
-        <li>
+        <li class="aside-card">
           <AsideCard title="visitors" :headLink="{ title: 'view all', path: '/profile' }">
             <template v-slot:card-body>
               <ul class="visitor-cards-list">
@@ -124,7 +124,7 @@ const courses = ref([
             </template>
           </AsideCard>
         </li>
-        <li>
+        <li class="aside-card">
           <AsideCard title="You may like these courses">
             <template v-slot:card-body>
               <ul class="course-cards-list">
@@ -393,5 +393,8 @@ const courses = ref([
   transform: translateX(-50%) translateY(-50%);
   z-index: 1;
   transition: transform 1s;
+}
+.aside-card {
+  margin-bottom: 20px;
 }
 </style>

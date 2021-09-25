@@ -22,9 +22,11 @@ defineProps({
   <div class="aside-card">
     <div class="aside-card-header">
       <h3 class="aside-card-title">{{ title }}</h3>
-      <router-link v-if="headLink && headLink.path" :to="headLink.path">
-        {{ headLink.title }}
-      </router-link>
+      <slot name="head-link">
+        <router-link v-if="headLink && headLink.path" :to="headLink.path" class="head-link">
+          {{ headLink.title }}
+        </router-link>
+      </slot>
     </div>
     <slot name="card-body"></slot>
   </div>    
@@ -36,8 +38,8 @@ defineProps({
 .aside-card {
   background: $white;
   border-radius: 4px;
-  margin-bottom: 20px;
   padding: 25px 30px;
+  box-shadow: 0px 20px 60px $gray-200;
 }
 .aside-card-header {
   display: flex;
@@ -45,7 +47,7 @@ defineProps({
   justify-content: space-between;
   border-bottom: 1px solid $white-100;
   padding-bottom: 20px;
-  > a {
+  > .head-link {
     text-decoration: none;
     text-transform: uppercase;
     color: $blue-400;
@@ -54,7 +56,7 @@ defineProps({
     transition: transform 0.2s, filter 0.2s;
     &:hover {
       filter: brightness(1.3);
-      transform: translateX(10px) skewX(-10deg);
+      transform: translateX(5px) skewX(-10deg);
     }
   }
 }

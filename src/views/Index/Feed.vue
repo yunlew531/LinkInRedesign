@@ -467,6 +467,7 @@ const handleBtnsShow = (e) => {
   width: 100%;
   color: $white;
   text-transform: uppercase;
+  cursor: pointer;
   background: $blue-400;
   border-radius: 4px;
   border: 1px solid $blue-400;
