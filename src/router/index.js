@@ -16,8 +16,8 @@ const routes = [
         children: [
           {
             path: '',
-            name: 'ProfileMain',
-            component: () => import('@/views/Index/Profile/ProfileMain.vue'),
+            name: 'ProfileIndex',
+            component: () => import('@/views/Index/Profile/Index.vue'),
           },
           {
             path: 'interests',
@@ -39,8 +39,8 @@ const routes = [
         children: [
           {
             path: 'profile',
-            name: 'UserProfileMain',
-            component: () => import('@/views/Index/Profile/ProfileMain.vue'),
+            name: 'UserProfileIndex',
+            component: () => import('@/views/Index/Profile/Index.vue'),
           },
           {
             path: 'profile/interests',
@@ -77,10 +77,21 @@ const routes = [
         name: 'Jobs',
         component: () => import('@/views/Index/Jobs.vue'),
       },
+      {
+        path: 'notices',
+        name: 'Notices',
+        component: () => import('@/views/Index/Notices.vue'),
+        children: [
+          {
+            path: '',
+            name: 'NoticeIndex',
+            component: () => import('@/views/Index/Notices/Index.vue'),
+          }
+        ],
+      },
     ],
   },
-  
-  { path: "/*", redirect: "/"},
+  { path: "/*", redirect: "/profile"},
 ];
 
 export default createRouter({ history, routes });

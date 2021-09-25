@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
+import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
 import getImageUrl from '@/mixins/getImageUrl.js';
 
@@ -79,7 +80,7 @@ const courses = ref([
                 <span class="user-name">Dmitry Kargaev</span>
                 <img class="user-name-logo" src="@/assets/images/in-logo.png" alt="LinkIned logo">
               </span>
-              <router-link to="/profile" class="user-position-group">
+              <router-link to="/" class="user-position-group">
                 <img src="@/assets/images/Vector.png" alt="position mark">
                 <span>Saint Petersburg, Russian Federation</span>
               </router-link>
@@ -99,23 +100,14 @@ const courses = ref([
     <aside class="aside">
       <ul>
         <li class="aside-card">
-          <AsideCard title="your dashboard" :headLink="{ title: 'go to stats', path: '/stats' }">
-            <template v-slot:card-body>
-              <span class="dashboard-num">367</span>
-              <h4 class="dashboard-title">views today</h4>
-              <span class="dashboard-num">15</span>
-              <h4 class="dashboard-title">posts views</h4>
-              <span class="dashboard-num">9</span>
-              <h4 class="dashboard-title">search appereances</h4>
-            </template>
-          </AsideCard>
+          <MiniDashboard></MiniDashboard>
         </li>
         <li class="aside-card">
-          <AsideCard title="visitors" :headLink="{ title: 'view all', path: '/profile' }">
+          <AsideCard title="visitors" :headLink="{ title: 'view all', path: '/' }">
             <template v-slot:card-body>
               <ul class="visitor-cards-list">
                 <li v-for="visitor in visitors" :key="visitor.fileName" class="visitor-card">
-                  <router-link to="/profile">
+                  <router-link to="/">
                     <img :src="getImageUrl(visitor.fileName)" :alt="visitor.name" class="visitor-img">
                     <p>{{ visitor.description }}</p>
                   </router-link>
@@ -129,7 +121,7 @@ const courses = ref([
             <template v-slot:card-body>
               <ul class="course-cards-list">
                 <li v-for="course in courses" :key="courses.fileName" class="course-card">
-                  <router-link to="/profile" class="course-link">
+                  <router-link to="/" class="course-link">
                     <div class="course-img-group">
                       <img src="@/assets/images/play.png" alt="play video" class="play-video-btn">
                       <img :src="getImageUrl(course.fileName)" :alt="course.title" class="course-img">

@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import getImageUrl from '@/mixins/getImageUrl';
 import dayjs from '@/mixins/dayjs';
 import AsideCard from '@/components/Index/AsideCard.vue';
-import AsideCard1 from '../../components/Index/AsideCard.vue';
 
 const jobs = ref([
   {
@@ -138,7 +137,7 @@ const searchTheHistory = (id) => {
               <ul class="tracked-jobs-list">
                 <li class="tracked-job">
                   <router-link to="/" class="tracked-job-link">
-                    <img src="@/assets/images/Rectangle 2.2-1.png" alt="UX/UI Designer"
+                    <img :src="getImageUrl('Rectangle 2.2-1')" alt="UX/UI Designer"
                       class="tracked-job-img">
                     <div class="tracked-job-content">
                       <h3>UX/UI Designer</h3>

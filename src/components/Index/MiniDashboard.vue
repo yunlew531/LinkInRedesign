@@ -1,33 +1,20 @@
 <script setup>
-defineProps({
-  title: {
-    type: String,
-    default: 'title',
-    required: true,
-  },
-  headLink: {
-    type: Object,
-    validator: (prop) => {
-      const isTitleValid = typeof prop.title === 'string';
-      const isPathValid = prop.path && prop.path[0] === '/';
-      return isTitleValid && isPathValid;
-    },
-  },
-});
+
 </script>
 
 <template>
   <div class="aside-card">
     <div class="aside-card-header">
-      <h3 class="aside-card-title">{{ title }}</h3>
-      <slot name="head-link">
-        <router-link v-if="headLink && headLink.path" :to="headLink.path" class="head-link">
-          {{ headLink.title }}
-        </router-link>
-      </slot>
+      <h3 class="aside-card-title">your dashboard</h3>
+      <router-link to="/stats" class="head-link">go to stats</router-link>
     </div>
-    <slot name="card-body"></slot>
-  </div>    
+    <span class="dashboard-num">367</span>
+    <h4 class="dashboard-title">views today</h4>
+    <span class="dashboard-num">15</span>
+    <h4 class="dashboard-title">posts views</h4>
+    <span class="dashboard-num">9</span>
+    <h4 class="dashboard-title">search appereances</h4>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -62,5 +49,15 @@ defineProps({
   text-transform: uppercase;
   font-size: $fs-6;
   font-weight: bold;
+}
+.dashboard-num {
+  display: block;
+  font-size: $fs-1;
+  color: $blue-400;
+  margin-top: 20px;
+}
+.dashboard-title {
+  font-weight: normal;
+  margin-top: 10px;
 }
 </style>

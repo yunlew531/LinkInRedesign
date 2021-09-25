@@ -92,7 +92,7 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
     <span class="projects-section-subtitle">3 of 12</span>
     <ul class="project-list">
       <li v-for="project in projectsList" :key="project.title" class="project-card">
-        <router-link to="/profile">
+        <router-link to="/">
           <img :src="getImageUrl(project.fileName)" alt="project.title" class="project-img">
           <h3 class="project-card-title">{{ project.title }}</h3>
           <h4 class="project-card-subtitle">{{ project.subtitle }}</h4>
@@ -109,7 +109,7 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
         <h3 class="skill-card-title">User experience (UX)</h3>
         <ul class="users-photo-list">
           <li v-for="user in filterFivePerson(skill.users)" :key="user.fileName">
-            <router-link to="/profile">
+            <router-link to="/">
               <img class="skill-user-img" :src="getImageUrl(user.fileName)" alt="user">
             </router-link>
           </li>

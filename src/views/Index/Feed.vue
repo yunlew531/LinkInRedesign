@@ -51,10 +51,15 @@ onMounted(() => {
   });
 });
 
-const handleBtnsShow = (e) => {
-  const btnsListEl = e.target.closest('.card-btns-group').querySelector('ul');
-  if(e.type === 'mouseenter') btnsListEl.classList.add('show');
-  else if (e.type === 'mouseleave') btnsListEl.classList.remove('show');
+const activeBtnsList = ref([]);
+const showBtnsList = (feedId, event) => {
+  if(event.type === 'mouseenter') 
+    activeBtnsList.value.push(feedId);
+  else if(event.type === 'mouseleave') {
+    const idx = activeBtnsList.value.indexOf(feedId);
+    if(idx === -1) return;
+    activeBtnsList.value.splice(idx, 1)
+  }
 };
 </script>
 
@@ -86,10 +91,15 @@ const handleBtnsShow = (e) => {
                 {{ userKey === feed.likes.length - 1 ?  ' liked this' : '' }}
               </li>
             </ul>
-            <div class="card-btns-group" @mouseleave="handleBtnsShow($event)">
-              <button type="button" @mouseenter="handleBtnsShow($event)"
+            <div class="card-btns-group" :class="{ show: activeBtnsList.includes(feed.id) }"
+              @mouseleave="showBtnsList(feed.id ,$event)"
+              @mouseenter="showBtnsList(feed.id, $event)">
+              <button type="button"
                 class="feed-card-more-btn">
-                <img src="@/assets/images/Other.png" alt="more button">
+                <img v-show="!activeBtnsList.includes(feed.id)"
+                  src="@/assets/images/Other.png" alt="more button">
+                <img v-show="activeBtnsList.includes(feed.id)"
+                  src="@/assets/images/chevron-down.png" alt="more button">
               </button>
               <ul>
                 <li>
@@ -371,7 +381,9 @@ const handleBtnsShow = (e) => {
         padding: 10px 20px;
       }
     }
-    &.show {
+  }
+  &.show {
+    ul {
       visibility: visible;
       opacity: 1;
     }
@@ -383,6 +395,10 @@ const handleBtnsShow = (e) => {
   cursor: pointer;
   transition: transform 0.2s;
   padding: 5px 10px;
+  > img {
+    width: 24px;
+    height: 24px;
+  }
 }
 .feed-card-body {
   letter-spacing: 0.025rem;
