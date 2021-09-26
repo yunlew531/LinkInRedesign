@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
+import store from '@/composition/store.js';
 import getImageUrl from '@/mixins/getImageUrl.js';
+
+const { setOffcanvasShow } = store;
 
 const navList = ref([
   {
@@ -29,6 +32,8 @@ const navList = ref([
     path: '/notices',
   },
 ]);
+
+const showOffcanvas = () => setOffcanvasShow(true);
 </script>
 
 <template>
@@ -66,10 +71,10 @@ const navList = ref([
           </p>
         </div>
       </router-link>
-      <div class="other-btn">
+      <button type="button" class="other-btn" @click="showOffcanvas">
         <img src="@/assets/images/Other.png" alt="other">
         <span>OTHER</span>
-      </div>
+      </button>
     </div>
   </header>
 </template>
@@ -225,8 +230,10 @@ const navList = ref([
   justify-content: center;
   align-items: center;
   width: 90px;
+  border: none;
   border-left: 1px solid $white-100;
   border-right: 1px solid $white-100;
+  background: transparent;
   cursor: pointer;
   font-size: $fs-6;
   font-weight: bold;

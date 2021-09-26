@@ -5,12 +5,14 @@
       <router-view />
     </div>
     <Footer />
+    <Offcanvas />
   </div>
 </template>
 
 <script setup>
 import Navigation from '@/components/Index/Navigation.vue';
 import Footer from '@/components/Index/Footer.vue';
+import Offcanvas from '@/components/Index/Offcanvas.vue';
 </script>
 
 <style lang="scss" scoped>
