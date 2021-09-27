@@ -40,19 +40,22 @@ const currentComponent =  computed(() => {
   return component;
 })
 
-const handleComponent = (component) => {
-  currentDisplay.value = '';
-  nextDisplay.value = component;
-};
-
-let height = 0;
+let elHeight = 0;
 const fillHeightEl = ref(null);
-const fillHeight = (el) => {
-  if (el) {
-    height = el.clientHeight || height;
-  } else height = 0;
+const handleComponent = (payload) => {
+  if(!payload) {
+    elHeight = 0;
+  } else if(payload instanceof Element) {
+    const el = payload;
+    elHeight = el.clientHeight || elHeight;
+    currentDisplay.value = nextDisplay.value;
+  } else {
+    currentDisplay.value = '';
+    nextDisplay.value = payload;
+  }
 
-  if(!el.clientHeight || !el) fillHeightEl.value.style.height = `${height}px`
+  if(!payload.clientHeight || !payload)
+    fillHeightEl.value.style.height = `${elHeight}px`
 };
 </script>
 
@@ -69,9 +72,9 @@ const fillHeight = (el) => {
   </div>
   <div ref="fillHeightEl"></div>
   <transition name="fade" mode="out-in" 
-    @before-enter="fillHeight(0)"
-    @before-leave="fillHeight($event)"
-    @after-leave="fillHeight($event), currentDisplay = nextDisplay">
+    @before-enter="handleComponent(0)"
+    @before-leave="handleComponent($event)"
+    @after-leave="handleComponent($event)">
     <component :is="currentComponent" />
   </transition>
   <div class="divide">

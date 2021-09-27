@@ -91,6 +91,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Index/Login.vue'),
+  },
   { path: "/*", redirect: "/profile"},
 ];
 

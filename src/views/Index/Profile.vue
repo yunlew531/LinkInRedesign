@@ -4,6 +4,7 @@ import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
 import getImageUrl from '@/mixins/getImageUrl.js';
+import { apiGetUser } from '@/api'
 
 const visitors = ref([
   {
@@ -50,6 +51,18 @@ const courses = ref([
     viewers: '13858',
   },
 ]);
+
+const user = ref({});
+const getUser = async () => {
+  try {
+    const { data } = await apiGetUser('4Hvq6PZZ9L5GSeHjkg2C');
+    user.value = data.user;
+  } catch(err) {
+    const message = err.response?.data.message || '無法取得資料';
+    alert(message);
+  }
+}
+getUser();
 </script>
 
 <template>

@@ -6,7 +6,15 @@ const { setOffcanvasShow } = store;
 
 const state = inject('state');
 
-const isOffcanvasShow = computed(() => state.value.isOffcanvasShow);
+const isOffcanvasShow = computed(() => {
+  const { isOffcanvasShow } = state.value;
+  const { body } = document;
+
+  if(isOffcanvasShow) body.style.overflow = 'hidden';
+  else body.style.overflow = 'auto';
+
+  return isOffcanvasShow;
+});
 const closeOffcanvas = () => setOffcanvasShow(false);
 </script>
 
