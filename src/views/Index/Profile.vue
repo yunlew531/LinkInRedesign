@@ -1,10 +1,22 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject, computed, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { apiGetUser } from '@/api';
+import getImageUrl from '@/mixins/getImageUrl.js';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
-import getImageUrl from '@/mixins/getImageUrl.js';
-import { apiGetUser } from '@/api'
+
+const state = inject('state');
+const router = useRouter();
+const route = useRoute();
+
+const isLogin = computed(() => state.value.isLogin);
+if(!isLogin.value && route.name === 'Profile') router.push('/login');
+
+watch(() => route.path, () => {
+  router.go();
+});
 
 const visitors = ref([
   {
@@ -52,15 +64,18 @@ const courses = ref([
   },
 ]);
 
+const uid = computed(() => {
+  let uid = '';
+  if (route.name === 'ProfileIndex') ({ uid } = state.value);
+  else if (route.name === 'UserProfileIndex') ({ uid } = route.params);
+  return uid;
+});
 const user = ref({});
 const getUser = async () => {
   try {
-    const { data } = await apiGetUser('4Hvq6PZZ9L5GSeHjkg2C');
+    const { data } = await apiGetUser(uid.value);
     user.value = data.user;
-  } catch(err) {
-    const message = err.response?.data.message || '無法取得資料';
-    alert(message);
-  }
+  } catch(err) {}
 }
 getUser();
 </script>
@@ -90,7 +105,7 @@ getUser();
           <div>
             <p class="user-content">
               <span class="user-name-group">
-                <span class="user-name">Dmitry Kargaev</span>
+                <span class="user-name">{{ user.name }}</span>
                 <img class="user-name-logo" src="@/assets/images/in-logo.png" alt="LinkIned logo">
               </span>
               <router-link to="/" class="user-position-group">

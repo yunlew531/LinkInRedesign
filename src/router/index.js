@@ -94,9 +94,16 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Index/Login.vue'),
+    component: () => import('@/views/Login.vue'),
   },
   { path: "/*", redirect: "/profile"},
 ];
 
-export default createRouter({ history, routes });
+const router = createRouter({ history, routes });
+
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0);
+  next();
+})
+
+export default router;

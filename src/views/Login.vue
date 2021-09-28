@@ -1,15 +1,68 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject, computed } from 'vue';
+import { apiRegister, apiSignIn } from '@/api';
 import Footer from '@/components/Index/Footer.vue';
+import store from '@/composition/store';
+import { useRouter } from 'vue-router';
 
-const status = ref('login');
-let nextStatus = '';
-const handleStatus = ($event, newStatus) => {
-  if($event instanceof Element) 
-    status.value = nextStatus;
+const router = useRouter();
+const state = inject('state');
+const { setLogin, setUid } = store;
+
+const isLogin = computed(() => state.value.isLogin);
+const middleware = () => {
+  if (isLogin.value) router.push('/');
+};
+middleware()
+
+const currentPanel = ref('login');
+let nextPanel = '';
+const handleStatus = ($event, newPanel) => {
+  if ($event instanceof Element) 
+    currentPanel.value = nextPanel;
   else {
-    status.value = '';
-    nextStatus = newStatus;
+    currentPanel.value = '';
+    nextPanel = newPanel;
+  }
+};
+
+const registerForm = ref({
+  name: '',
+  phone: '',
+  email: '',
+  password: '',
+  address: '',
+});
+const register = async () => {
+  try {
+    const { data } = await apiRegister(registerForm.value);
+    const { uid, token, expired } = data;
+    
+    document.cookie = `LinkInRe=${token};expires=${new Date(expired)};`;
+    setUid(uid);
+    setLogin();
+    router.push('/');
+  } catch (err) {
+    const message = err.response?.data.message || '無法註冊';
+    alert(message);
+  }
+};
+
+const signinForm = ref({
+  email: '',
+  password: '',
+});
+const signIn = async () => {
+  try {
+    const { data } = await apiSignIn(signinForm.value);
+    const { token, expired, uid } = data;
+
+    document.cookie = `LinkInRe=${token};expires=${new Date(expired)};`;
+    setUid(uid);
+    setLogin();
+    router.push('/');
+  } catch (err) {
+    alert(err.response.data.message);
   }
 };
 </script>
@@ -20,7 +73,7 @@ const handleStatus = ($event, newStatus) => {
       <main class="login-main">
         <p class="login-paragraph">Find Dream Jobs,<br> All In LinkIn</p>
         <transition-group name="card" @after-leave="handleStatus($event)">
-          <section v-if="status === 'login'" class="login-card" key="login">
+          <section v-if="currentPanel === 'login'" class="login-card" key="login">
             <div class="login-card-header">
               <img src="@/assets/images/Logo.png" alt="LinkIn logo" class="logo-img">
               <h1>Link<span>In</span></h1>
@@ -28,33 +81,45 @@ const handleStatus = ($event, newStatus) => {
             <div class="login-card-body">
               <label class="input-group">
                 <span>Email</span>
-                <input type="email">
+                <input type="email" v-model="signinForm.email">
               </label>
               <label class="input-group">
                 <span>Password</span>
-                <input type="password">
+                <input type="password" v-model="signinForm.password">
               </label>
             </div>
-            <button type="button" class="login-btn">Login</button>
+            <button type="button" class="login-btn" @click="signIn">Login</button>
             <button type="button" class="go-register-btn"
               @click="handleStatus($event, 'register')">No account? register one</button>
           </section>
-          <section v-if="status === 'register'" class="login-card" key="register">
+          <section v-if="currentPanel === 'register'" class="login-card" key="register">
             <div class="login-card-header">
               <img src="@/assets/images/Logo.png" alt="LinkIn logo" class="logo-img">
               <h1>Link<span>In</span></h1>
             </div>
-            <div class="login-card-body">
+            <div class="login-card-body login-card-body-register">
+              <label class="input-group">
+                <span>Name</span>
+                <input type="text" v-model="registerForm.name">
+              </label>
+              <label class="input-group">
+                <span>Phone</span>
+                <input type="text" v-model="registerForm.phone">
+              </label>
               <label class="input-group">
                 <span>Email</span>
-                <input type="email">
+                <input type="email" v-model="registerForm.email">
               </label>
               <label class="input-group">
                 <span>Password</span>
-                <input type="password">
+                <input type="password" v-model="registerForm.password">
+              </label>
+              <label class="input-group">
+                <span>Address</span>
+                <input type="password" v-model="registerForm.address">
               </label>
             </div>
-            <button type="button" class="login-btn">Register</button>
+            <button type="button" class="login-btn" @click="register">Register</button>
             <button type="button" class="go-login-btn"
               @click="handleStatus($event, 'login')">I have account</button>
           </section>
@@ -101,7 +166,7 @@ const handleStatus = ($event, newStatus) => {
   border-radius: 6px;
   box-shadow: 5px 5px 30px $blue-100;
   position: relative;
-  transition: transform 1s, opacity 1s;
+  transition: transform 0.5s, opacity 0.5s;
 }
 .login-card-header {
   font-size: $fs-3;
@@ -121,6 +186,15 @@ const handleStatus = ($event, newStatus) => {
 }
 .login-card-body {
   padding: 0 30px;
+}
+.login-card-body-register {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -2%;
+  > .input-group {
+    width: 48%;
+    margin-right: 2%;
+  }
 }
 .input-group {
   display: block;
