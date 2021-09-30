@@ -1,5 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import userReq from '@/api/userReq';
+import { apiCheckLogin } from '@/api';
+import store from '@/composition/store';
 import Index from '@/views/Index.vue';
+
+const { state, setLogin, setUid } = store;
 
 const history = createWebHashHistory('/LinkInRedesign/');
 const routes = [
@@ -13,21 +18,25 @@ const routes = [
         path: 'profile',
         name: 'Profile',
         component: () => import('@/views/Index/Profile.vue'),
+        meta: { requiresAuth: true },
         children: [
           {
             path: '',
             name: 'ProfileIndex',
             component: () => import('@/views/Index/Profile/Index.vue'),
+            meta: { requiresAuth: true },
           },
           {
             path: 'interests',
             name: 'ProfileInterests',
             component:  () => import('@/views/Index/Profile/ProfileInterests.vue'),
+            meta: { requiresAuth: true },
           },
           {
             path: 'articles',
             name: 'ProfileArticles',
             component:  () => import('@/views/Index/Profile/ProfileArticles.vue'),
+            meta: { requiresAuth: true },
           }
         ],
       },
@@ -35,22 +44,22 @@ const routes = [
         path: '@:uid',
         name: 'User',
         redirect: (to) => `/@${to.params.uid}/profile`,
-        component: () => import('@/views/Index/Profile.vue'),
+        component: () => import('@/views/Index/User.vue'),
         children: [
           {
             path: 'profile',
             name: 'UserProfileIndex',
-            component: () => import('@/views/Index/Profile/Index.vue'),
+            component: () => import('@/views/Index/User/Index.vue'),
           },
           {
             path: 'profile/interests',
             name: 'UserProfileInterests',
-            component:  () => import('@/views/Index/Profile/ProfileInterests.vue'),
+            component:  () => import('@/views/Index/User/ProfileInterests.vue'),
           },
           {
             path: 'profile/articles',
             name: 'UserProfileArticles',
-            component:  () => import('@/views/Index/Profile/ProfileArticles.vue'),
+            component:  () => import('@/views/Index/User/ProfileArticles.vue'),
           }
         ],
       },
@@ -96,14 +105,51 @@ const routes = [
     name: 'Login',
     component: () => import('@/views/Login.vue'),
   },
-  { path: "/*", redirect: "/profile"},
+  { 
+    path: '/notFound',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound.vue'),
+  },
 ];
 
 const router = createRouter({ history, routes });
 
-router.beforeEach((to, from, next) => {
-  window.scrollTo(0, 0);
-  next();
-})
+const checkLogin = () => new Promise(async (resolve, reject) => {
+  const token = document.cookie.replace(/(?:(?:^|.*;\s*)LinkInRe\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  userReq.defaults.headers.common.Authorization = `${token}`;
+  try {
+    const { data } = await apiCheckLogin();
+    const { uid, success } = data;
+    if (success) {
+      setUid(uid);
+      setLogin();
+      resolve();
+    } else {
+      setLogin(false);
+      reject();
+    }
+  } catch (err) {
+    setLogin(false);
+    reject();
+  }
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (state.value.isLogin) {
+    next();
+  } else if (to.meta.requiresAuth) {
+    try {
+      await checkLogin();
+      next();
+    } catch (err) {
+      next({
+        path: '/login',
+      });
+    }
+  } else {
+    window.scrollTo(0, 0);
+    next();
+  }
+});
 
 export default router;

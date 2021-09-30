@@ -1,12 +1,18 @@
 <script setup>
-import { ref, inject, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { apiGetUser } from '@/api';
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
 
-const state = inject('state');
+const route = useRoute();
+const router = useRouter();
+
+onBeforeRouteUpdate(() => {
+  router.go();
+});
 
 const visitors = ref([
   {
@@ -54,13 +60,15 @@ const courses = ref([
   },
 ]);
 
-const uid = computed(() => state.value.uid);
+const uid = computed(() => route.params.uid);
 const user = ref({});
 const getUser = async () => {
   try {
     const { data } = await apiGetUser(uid.value);
     user.value = data.user;
-  } catch(err) {}
+  } catch(err) {
+    router.push('/notFound');
+  }
 }
 getUser();
 </script>
