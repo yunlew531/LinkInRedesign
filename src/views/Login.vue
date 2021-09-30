@@ -1,19 +1,18 @@
 <script setup>
-import { ref, inject, computed } from 'vue';
+import { ref } from 'vue';
 import { apiRegister, apiSignIn } from '@/api';
 import Footer from '@/components/Index/Footer.vue';
 import store from '@/composition/store';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const state = inject('state');
 const { setLogin, setUid } = store;
 
-const isLogin = computed(() => state.value.isLogin);
-const middleware = () => {
-  if (isLogin.value) router.push('/');
-};
-middleware()
+// const isLogin = computed(() => state.value.isLogin);
+// const middleware = () => {
+//   if (isLogin.value) router.push('/');
+// };
+// middleware()
 
 const currentPanel = ref('login');
 let nextPanel = '';

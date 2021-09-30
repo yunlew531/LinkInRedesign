@@ -10,8 +10,8 @@ import AsideCard from '@/components/Index/AsideCard.vue';
 const route = useRoute();
 const router = useRouter();
 
-onBeforeRouteUpdate(() => {
-  router.go();
+onBeforeRouteUpdate((to, from) => {
+  if (to.name === from.name) router.go();
 });
 
 const visitors = ref([

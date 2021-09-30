@@ -1,6 +1,7 @@
 <script setup>
 import { inject, computed } from 'vue';
 import store from '@/composition/store.js';
+import { apiLogout } from '@/api';
 
 const { setOffcanvasShow } = store;
 
@@ -16,6 +17,13 @@ const isOffcanvasShow = computed(() => {
   return isOffcanvasShow;
 });
 const closeOffcanvas = () => setOffcanvasShow(false);
+
+const logout = async () => {
+  try {
+    const { data } = await apiLogout();
+    console.log(data);
+  } catch (err) {}
+};
 </script>
 
 <template>
@@ -25,8 +33,9 @@ const closeOffcanvas = () => setOffcanvasShow(false);
       <button type="button" class="close-offcanvas-btn" @click="closeOffcanvas">
         <img src="@/assets/images/close.png" alt="close offcanvas">
       </button>
-      <div class="offcanvas-head">
+      <div class="offcanvas-header">
         <h3>More from LinkedIn</h3>
+        <button class="logout-btn" @click="logout">logout</button>
       </div>
       <div class="offcanvas-links">
         <router-link to="/" class="offcanvas-link">
@@ -116,9 +125,29 @@ const closeOffcanvas = () => setOffcanvasShow(false);
     background: $blue-400;
   }
 }
-.offcanvas-head {
+.offcanvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-bottom: 1px solid $white-100;
   padding: 30px 20px;
+}
+.logout-btn {
+  font-size: $fs-5;
+  text-transform: uppercase;
+  color: $white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  background: $blue-200;
+  padding: 8px 16px;
+  transition: filter 0.2s;
+  &:hover {
+    filter: brightness(1.2);
+  }
+  &:active {
+    filter: brightness(0.9);
+  }
 }
 .offcanvas-links {
   display: flex;

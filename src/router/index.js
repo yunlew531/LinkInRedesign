@@ -104,6 +104,18 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/Login.vue'),
+    beforeEnter: async (to, from, next) => {
+      if (state.value.isLogin)
+        next({ path: '/' });
+      else {
+        try {
+          await checkLogin();
+          next({ path: '/' });
+        } catch (err) {
+          next();
+        }
+      }
+    },
   },
   { 
     path: '/notFound',
@@ -135,16 +147,14 @@ const checkLogin = () => new Promise(async (resolve, reject) => {
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (state.value.isLogin) {
+  if (state.value.isLogin)
     next();
-  } else if (to.meta.requiresAuth) {
+  else if (to.meta.requiresAuth) {
     try {
       await checkLogin();
       next();
     } catch (err) {
-      next({
-        path: '/login',
-      });
+      next({ path: '/login' });
     }
   } else {
     window.scrollTo(0, 0);
