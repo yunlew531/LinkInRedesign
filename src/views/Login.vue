@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { apiRegister, apiSignIn } from '@/api';
-import userReq from '@/api/userReq';
+import authReq from '@/api/auth_req';
 import Footer from '@/components/Index/Footer.vue';
 import store from '@/composition/store';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const { setLogin, setUid } = store;
+const { setLogin } = store;
 
 const currentPanel = ref('login');
 let nextPanel = '';
@@ -20,45 +20,49 @@ const handleStatus = ($event, newPanel) => {
   }
 };
 
+const isRegisterBtnDisable = ref(false);
 const registerForm = ref({
   name: '',
   phone: '',
   email: '',
   password: '',
-  address: '',
+  city: '',
 });
 const register = async () => {
+  isRegisterBtnDisable.value = true;
   try {
     const { data } = await apiRegister(registerForm.value);
-    const { uid, token, expired } = data;
+    const { token, expired } = data;
     
     document.cookie = `LinkInRe=${token};expires=${new Date(expired)};`;
-    setUid(uid);
     setLogin();
     router.push('/');
   } catch (err) {
     const message = err.response?.data.message || '無法註冊';
     alert(message);
   }
+  isRegisterBtnDisable.value = false;
 };
 
+const isSignInBtnDisable = ref(false);
 const signinForm = ref({
-  email: '',
-  password: '',
+  email: 'test@gmail.com',
+  password: '000000',
 });
 const signIn = async () => {
+  isSignInBtnDisable.value = true;
   try {
     const { data } = await apiSignIn(signinForm.value);
-    const { token, expired, uid } = data;
+    const { token, expired } = data;
 
     document.cookie = `LinkInRe=${token};expires=${new Date(expired)};`;
-    userReq.defaults.headers.common.Authorization = `${token}`;
-    setUid(uid);
+    authReq.defaults.headers.common.Authorization = `${token}`;
     setLogin();
     router.push('/');
   } catch (err) {
     alert(err.response.data.message);
   }
+  isSignInBtnDisable.value = false;
 };
 </script>
 
@@ -83,7 +87,8 @@ const signIn = async () => {
                 <input type="password" v-model="signinForm.password" @keyup.enter="signIn">
               </label>
             </div>
-            <button type="button" class="login-btn" @click="signIn">Login</button>
+            <button type="button" class="login-btn" @click="signIn" :disabled="isSignInBtnDisable"
+              :class="{ disabled: isSignInBtnDisable }">Login</button>
             <button type="button" class="go-register-btn"
               @click="handleStatus($event, 'register')">No account? register one</button>
           </section>
@@ -110,13 +115,14 @@ const signIn = async () => {
                 <input type="password" v-model="registerForm.password">
               </label>
               <label class="input-group">
-                <span>Address</span>
-                <input type="password" v-model="registerForm.address">
+                <span>City</span>
+                <input type="text" v-model="registerForm.city">
               </label>
             </div>
-            <button type="button" class="login-btn" @click="register">Register</button>
-            <button type="button" class="go-login-btn"
-              @click="handleStatus($event, 'login')">I have account</button>
+            <button type="button" class="register-btn" :class="{ disabled : isRegisterBtnDisable }"
+              @click="register" :disabled="isRegisterBtnDisable">Register</button>
+            <button type="button" class="go-login-btn" @click="handleStatus($event, 'login')">
+              I have account</button>
           </section>
         </transition-group>
       </main>
@@ -212,7 +218,7 @@ const signIn = async () => {
     }
   }
 }
-.login-btn {
+.login-btn, .register-btn {
   width: 100%;
   font-size: $fs-4;
   letter-spacing: 0.05rem;
@@ -229,6 +235,9 @@ const signIn = async () => {
   }
   &:active {
     filter: brightness(0.9);
+  }
+  &.disabled {
+    filter: brightness(0.5);
   }
 }
 .go-login-btn, .go-register-btn {

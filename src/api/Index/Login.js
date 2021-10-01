@@ -1,6 +1,6 @@
-import userReq from '../userReq';
+import authReq from '../auth_req';
 
-export const register = (registerForm) => userReq.post('/register', registerForm);
-export const signIn = (signInForm) => userReq.post('/signin', signInForm);
-export const logout = () => userReq.post('/logout');
-export const checkLogin = () => userReq.post('/user/check');
+export const register = (registerForm) => authReq.post('/register', registerForm);
+export const signIn = (signInForm) => authReq.post('/signin', signInForm);
+export const logout = () => authReq.post('/logout');
+export const checkLogin = () => authReq.post('/user/check');

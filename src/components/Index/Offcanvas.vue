@@ -25,7 +25,7 @@ const logout = async () => {
     await apiLogout();
     setLogin(false);
     closeOffcanvas();
-    document.cookie = `LinkInRe=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+    // document.cookie = `LinkInRe=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
     router.push('/login');
   } catch (err) {
     console.dir(err.response.data.message);

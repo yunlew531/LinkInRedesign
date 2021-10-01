@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import userReq from '@/api/userReq';
+import authReq from '@/api/auth_req';
 import { apiCheckLogin } from '@/api';
 import store from '@/composition/store';
 import Index from '@/views/Index.vue';
 
-const { state, setLogin, setUid } = store;
+const { state, setLogin } = store;
 
 const history = createWebHashHistory('/LinkInRedesign/');
 const routes = [
@@ -129,12 +129,9 @@ const router = createRouter({ history, routes });
 
 const checkLogin = () => new Promise(async (resolve, reject) => {
   const token = document.cookie.replace(/(?:(?:^|.*;\s*)LinkInRe\s*=\s*([^;]*).*$)|^.*$/, '$1');
-  userReq.defaults.headers.common.Authorization = `${token}`;
+  authReq.defaults.headers.common.Authorization = `${token}`;
   try {
-    const { data } = await apiCheckLogin();
-    const { uid } = data;
-    
-    setUid(uid);
+    await apiCheckLogin();
     setLogin();
     resolve();
   } catch (err) {

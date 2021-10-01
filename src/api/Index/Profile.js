@@ -1,3 +1,3 @@
-import userReq from '../userReq';
+import authReq from '../auth_req';
 
-export const getUser = (id) => userReq.get(`/user/${id}`);
+export const getProfile = () => authReq.get('/self/profile');

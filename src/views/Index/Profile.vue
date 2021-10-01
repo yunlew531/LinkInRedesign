@@ -1,12 +1,10 @@
 <script setup>
-import { ref, inject, computed } from 'vue';
-import { apiGetUser } from '@/api';
+import { ref } from 'vue';
+import { apiGetProfile } from '@/api';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
-
-const state = inject('state');
 
 const visitors = ref([
   {
@@ -54,15 +52,14 @@ const courses = ref([
   },
 ]);
 
-const uid = computed(() => state.value.uid);
 const user = ref({});
-const getUser = async () => {
+const getProfile = async () => {
   try {
-    const { data } = await apiGetUser(uid.value);
+    const { data } = await apiGetProfile();
     user.value = data.user;
   } catch(err) {}
 }
-getUser();
+getProfile();
 </script>
 
 <template>
@@ -93,9 +90,10 @@ getUser();
                 <span class="user-name">{{ user.name }}</span>
                 <img class="user-name-logo" src="@/assets/images/in-logo.png" alt="LinkIned logo">
               </span>
-              <router-link to="/" class="user-position-group">
+              <router-link :to="`/${user.city}`"
+                class="user-position-group">
                 <img src="@/assets/images/Vector.png" alt="position mark">
-                <span>Saint Petersburg, Russian Federation</span>
+                <span>{{ user.city }}</span>
               </router-link>
             </p>
             <p class="user-description">Freelance UX/UI designer, 80+ projects in web design, mobile apps
