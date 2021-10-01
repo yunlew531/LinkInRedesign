@@ -24,19 +24,16 @@ const routes = [
             path: '',
             name: 'ProfileIndex',
             component: () => import('@/views/Index/Profile/Index.vue'),
-            meta: { requiresAuth: true },
           },
           {
             path: 'interests',
             name: 'ProfileInterests',
             component:  () => import('@/views/Index/Profile/ProfileInterests.vue'),
-            meta: { requiresAuth: true },
           },
           {
             path: 'articles',
             name: 'ProfileArticles',
             component:  () => import('@/views/Index/Profile/ProfileArticles.vue'),
-            meta: { requiresAuth: true },
           }
         ],
       },
@@ -67,12 +64,14 @@ const routes = [
         path: 'feed',
         name: 'Feed',
         component: () => import('@/views/Index/Feed.vue'),
+        meta: { requiresAuth: true },
       },
       {
         path: 'network',
         name: 'Network',
         component: () => import('@/views/Index/Network.vue'),
         redirect: '/network/invitations',
+        meta: { requiresAuth: true },
         children: [
           {
             path: 'invitations',
@@ -85,11 +84,13 @@ const routes = [
         path: 'jobs',
         name: 'Jobs',
         component: () => import('@/views/Index/Jobs.vue'),
+        meta: { requiresAuth: true },
       },
       {
         path: 'notices',
         name: 'Notices',
         component: () => import('@/views/Index/Notices.vue'),
+        meta: { requiresAuth: true },
         children: [
           {
             path: '',
@@ -118,7 +119,7 @@ const routes = [
     },
   },
   { 
-    path: '/notFound',
+    path: '/:catchAll(.*)',
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue'),
   },
@@ -131,15 +132,11 @@ const checkLogin = () => new Promise(async (resolve, reject) => {
   userReq.defaults.headers.common.Authorization = `${token}`;
   try {
     const { data } = await apiCheckLogin();
-    const { uid, success } = data;
-    if (success) {
-      setUid(uid);
-      setLogin();
-      resolve();
-    } else {
-      setLogin(false);
-      reject();
-    }
+    const { uid } = data;
+    
+    setUid(uid);
+    setLogin();
+    resolve();
   } catch (err) {
     setLogin(false);
     reject();

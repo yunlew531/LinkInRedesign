@@ -1,9 +1,11 @@
 <script setup>
 import { inject, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import store from '@/composition/store.js';
 import { apiLogout } from '@/api';
 
-const { setOffcanvasShow } = store;
+const router = useRouter();
+const { setLogin, setOffcanvasDisplay } = store;
 
 const state = inject('state');
 
@@ -16,13 +18,18 @@ const isOffcanvasShow = computed(() => {
 
   return isOffcanvasShow;
 });
-const closeOffcanvas = () => setOffcanvasShow(false);
+const closeOffcanvas = () => setOffcanvasDisplay(false);
 
 const logout = async () => {
   try {
-    const { data } = await apiLogout();
-    console.log(data);
-  } catch (err) {}
+    await apiLogout();
+    setLogin(false);
+    closeOffcanvas();
+    document.cookie = `LinkInRe=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+    router.push('/login');
+  } catch (err) {
+    console.dir(err.response.data.message);
+  }
 };
 </script>
 

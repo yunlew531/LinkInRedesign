@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import store from '@/composition/store.js';
 import getImageUrl from '@/mixins/getImageUrl.js';
 
-const { setOffcanvasShow } = store;
+const { setOffcanvasDisplay } = store;
 
 const navList = ref([
   {
@@ -33,7 +33,7 @@ const navList = ref([
   },
 ]);
 
-const showOffcanvas = () => setOffcanvasShow(true);
+const showOffcanvas = () => setOffcanvasDisplay(true);
 </script>
 
 <template>

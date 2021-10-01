@@ -6,13 +6,13 @@ const state = ref({
   isOffcanvasShow: false,
 });
 
-const setOffcanvasShow = (boolean = true) => state.value.isOffcanvasShow = boolean;
+const setOffcanvasDisplay = (boolean = true) => state.value.isOffcanvasShow = boolean;
 const setLogin = (boolean = true) => state.value.isLogin = boolean;
 const setUid = (uid) => state.value.uid = uid;
 
 export default {
   state: readonly(state),
-  setOffcanvasShow,
+  setOffcanvasDisplay,
   setLogin,
   setUid,
 };

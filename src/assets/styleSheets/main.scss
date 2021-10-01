@@ -1,8 +1,28 @@
 @import './reset';
 @import './variables';
+@import './grid';
 
 body {
   background: $white-200;
   color: $dark-100;
   font-family: 'Montserrat', sans-serif;
+}
+
+@include ipad {
+  html {
+    overflow-y: scroll;
+  }
+  
+  :root {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  :root body {
+    position: absolute;
+  }
+  body {
+    width: 100vw;
+    overflow: hidden;
+  }
 }

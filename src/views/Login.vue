@@ -1,18 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { apiRegister, apiSignIn } from '@/api';
+import userReq from '@/api/userReq';
 import Footer from '@/components/Index/Footer.vue';
 import store from '@/composition/store';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const { setLogin, setUid } = store;
-
-// const isLogin = computed(() => state.value.isLogin);
-// const middleware = () => {
-//   if (isLogin.value) router.push('/');
-// };
-// middleware()
 
 const currentPanel = ref('login');
 let nextPanel = '';
@@ -57,6 +52,7 @@ const signIn = async () => {
     const { token, expired, uid } = data;
 
     document.cookie = `LinkInRe=${token};expires=${new Date(expired)};`;
+    userReq.defaults.headers.common.Authorization = `${token}`;
     setUid(uid);
     setLogin();
     router.push('/');
@@ -84,7 +80,7 @@ const signIn = async () => {
               </label>
               <label class="input-group">
                 <span>Password</span>
-                <input type="password" v-model="signinForm.password">
+                <input type="password" v-model="signinForm.password" @keyup.enter="signIn">
               </label>
             </div>
             <button type="button" class="login-btn" @click="signIn">Login</button>
