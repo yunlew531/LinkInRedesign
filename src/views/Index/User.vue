@@ -121,7 +121,7 @@ getUser();
     <aside class="aside">
       <ul>
         <li class="aside-card">
-          <MiniDashboard />
+          <MiniDashboard title="dashboard"/>
         </li>
         <li class="aside-card">
           <AsideCard title="visitors" :headLink="{ title: 'view all', path: '/' }">

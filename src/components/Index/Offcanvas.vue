@@ -5,7 +5,7 @@ import store from '@/composition/store.js';
 import { apiLogout } from '@/api';
 
 const router = useRouter();
-const { setLogin, setOffcanvasDisplay } = store;
+const { setLogin, setOffcanvasDisplay, setUser } = store;
 
 const state = inject('state');
 
@@ -25,12 +25,15 @@ const logout = async () => {
     await apiLogout();
     setLogin(false);
     closeOffcanvas();
-    // document.cookie = `LinkInRe=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+    setUser({});
+    document.cookie = `LinkInRe=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
     router.push('/login');
   } catch (err) {
     console.dir(err.response.data.message);
   }
 };
+
+const isLogin = computed(() => state.value.isLogin);
 </script>
 
 <template>
@@ -42,7 +45,7 @@ const logout = async () => {
       </button>
       <div class="offcanvas-header">
         <h3>More from LinkedIn</h3>
-        <button class="logout-btn" @click="logout">logout</button>
+        <button v-if="isLogin" class="logout-btn" @click="logout">logout</button>
       </div>
       <div class="offcanvas-links">
         <router-link to="/" class="offcanvas-link">

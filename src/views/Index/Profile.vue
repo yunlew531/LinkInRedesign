@@ -1,10 +1,15 @@
 <script setup>
-import { ref } from 'vue';
-import { apiGetProfile } from '@/api';
+import { ref, inject, computed } from 'vue';
+import { apiUploadPhoto, apiUploadBackgroundImg } from '@/api';
+import store from '@/composition/store';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
+import EditBtn from '@/components/Index/EditBtn.vue';
+
+const { getProfile, setUserPhoto, setUserBackgroundImg } = store;
+const state = inject('state');
 
 const visitors = ref([
   {
@@ -52,14 +57,41 @@ const courses = ref([
   },
 ]);
 
-const user = ref({});
-const getProfile = async () => {
-  try {
-    const { data } = await apiGetProfile();
-    user.value = data.user;
-  } catch(err) {}
+const editDescription = () => {
+  console.log('editDescription');
 }
+
+const uploadPhoto = async (e) => {
+  const file = e.target.files[0];
+  const formData = new FormData();
+  formData.append('img-file', file);
+  try {
+    const { data } = await apiUploadPhoto(formData);
+    const { url } = data;
+    setUserPhoto(url);
+  } catch (err) {
+    alert(err.response.data.message);
+  }
+};
+
+const uploadBackgroundImg = async (e) => {
+  const file = e.target.files[0];
+  const formData = new FormData();
+  formData.append('img-file', file);
+  try {
+    const { data } = await apiUploadBackgroundImg(formData);
+    const { url } = data;
+    setUserBackgroundImg(url);
+  } catch (err) {
+    alert(err.response.data.message);
+  }
+};
+
 getProfile();
+const user = computed(() => state.value.user);
+
+const bgCover = computed(() =>
+  `url(${user.value.background_cover || getImageUrl('Rectangle 3')})`);
 </script>
 
 <template>
@@ -68,9 +100,12 @@ getProfile();
       <section class="profile-header">
         <div class="profile-cover">
           <div class="profile-edit-btns-group">
-            <button type="button">
-              <img src="@/assets/images/upload.png" alt="upload">
-            </button>
+            <div class="upload-bg-cover">
+              <button type="button">
+                <img src="@/assets/images/upload.png" alt="upload">
+              </button>
+              <input type="file" @change="uploadBackgroundImg($event)">
+            </div>
             <button type="button">edit profile</button>
             <button type="button">
               <img src="@/assets/images/more-horizontal.png" alt="more infomation">
@@ -79,10 +114,16 @@ getProfile();
         </div>
         <div class="profile-header-content">
           <div class="user-photo">
+            <input type="file" class="upload-photo-input" @change="uploadPhoto($event)">
             <div class="user-photo-hover">
               <img src="@/assets/images/camera.png" alt="camera">
             </div>
-            <img src="@/assets/images/user-1-big.png" alt="Dmitry Kargaev">
+            <div class="user-photo-content">
+              <img :src="user.photo || getImageUrl('user')" alt="user photo">
+              <button v-if="!user.photo" type="button" class="upload-photo-btn">
+                <img src="@/assets/images/upload.png" alt="upload">
+              </button>
+            </div>
           </div>
           <div>
             <p class="user-content">
@@ -96,11 +137,15 @@ getProfile();
                 <span>{{ user.city }}</span>
               </router-link>
             </p>
-            <p class="user-description">Freelance UX/UI designer, 80+ projects in web design, mobile apps
-                (iOS & android) and creative projects. Open to offers.</p>
+            <div class="user-description-container">
+              <p class="user-description">Freelance UX/UI designer, 80+ projects in web design, mobile apps
+                  (iOS & android) and creative projects. Open to offers.</p>
+              <EditBtn @edit="editDescription"/>
+            </div>
             <div class="btns-group">
               <button class="contact-btn" type="button">Contact info</button>
-              <button class="connections-btn" type="button">1,043 connections</button>
+              <button class="connections-btn" type="button">
+                {{ user.connections_qty || 0 }} connections</button>
             </div>
           </div>
         </div>
@@ -111,7 +156,7 @@ getProfile();
     <aside class="aside">
       <ul>
         <li class="aside-card">
-          <MiniDashboard />
+          <MiniDashboard :profileViews="user.profile_views" />
         </li>
         <li class="aside-card">
           <AsideCard title="visitors" :headLink="{ title: 'view all', path: '/' }">
@@ -174,13 +219,13 @@ getProfile();
 }
 .profile-cover {
   height: 180px;
-  background: url('@/assets/images/Rectangle 3.png') no-repeat center;
+  background: v-bind(bgCover) no-repeat center;
   background-size: cover;
   padding: 20px 30px;
 }
 .profile-edit-btns-group {
   display: flex;
-  > button {
+  button {
     background: $white;
     padding: 8px 12px;
     border: none;
@@ -195,12 +240,63 @@ getProfile();
       transform: translateY(-2px);
       color: $blue-200;
     }
-    &:first-child {
-      margin-right: auto;
-    }
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+.upload-bg-cover {
+  position: relative;
+  margin-right: auto;
+  transition: transform 0.2s;
+  > button {
+    height: 100%;
+    margin-right: 0;
+  }
+  > input {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: dashed 1px red;
+    opacity: 0;
+    z-index: 1;
+  }
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+.upload-photo-btn {
+  background: $blue-100;
+  padding: 10px;
+  border: none;
+  box-shadow: 0px 10px 30px rgba(113, 123, 133, 0.05);
+  border-radius: 4px;
+  cursor: pointer;
+  animation: heart 2s infinite;
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}
+@keyframes heart {
+  0%   {
+    transform: translateY(0px);
+  }
+  50%  {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+.user-photo-content {
+  height: 100%;
+  > img {
+    border-radius: 100%;
+    height: 100%; 
+
   }
 }
 .user-photo {
@@ -213,15 +309,24 @@ getProfile();
   margin: 0 30px -50px 0;
   position: relative;
   cursor: pointer;
-  overflow: hidden;
   > img {
     height: 100%;
+    border-radius: 100%;
   }
   &:hover {
     > .user-photo-hover {
       opacity: 0.5;
     }
   }
+}
+.upload-photo-input {
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed blue;
+  z-index: 1;
+  opacity: 0;
 }
 .user-photo-hover {
   opacity: 0;
@@ -277,6 +382,16 @@ getProfile();
   }
   &:hover {
     filter: brightness(1.3);
+  }
+}
+.user-description-container {
+  position: relative;
+  &:hover {
+    .user-description-edit-btn {
+      transform: translateX(-50%) translateY(-30px);
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }
 .user-description {

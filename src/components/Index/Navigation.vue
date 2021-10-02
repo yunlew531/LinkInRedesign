@@ -1,9 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject, computed } from 'vue';
 import store from '@/composition/store.js';
 import getImageUrl from '@/mixins/getImageUrl.js';
 
+const state = inject('state');
 const { setOffcanvasDisplay } = store;
+
+const isLogin = computed(() => state.value.isLogin);
 
 const navList = ref([
   {
@@ -34,6 +37,7 @@ const navList = ref([
 ]);
 
 const showOffcanvas = () => setOffcanvasDisplay(true);
+const user = computed(() => state.value.user);
 </script>
 
 <template>
@@ -44,7 +48,7 @@ const showOffcanvas = () => setOffcanvasDisplay(true);
           <img class="logo-img" src="@/assets/images/Logo.png" alt="LinkIn">
         </router-link>
       </h1>
-      <ul class="nav-list">
+      <ul v-if="isLogin" class="nav-list">
         <li v-for="link in navList" :key="link.title" class="nav-link">
           <router-link :to="link.path" active-class="active" v-slot="{ isActive }">
             <img :src="getImageUrl(`${link.fileName}${isActive ? '-active' : ''}`)"
@@ -57,14 +61,15 @@ const showOffcanvas = () => setOffcanvasDisplay(true);
         <img class="search-img" src="@/assets/images/search.png" alt="search">
         <input class="search-input" type="text" placeholder="Search">
       </div>
-      <router-link to="/" class="user-panel">
-        <img class="user-panel-photo" src="@/assets/images/user-1.png" alt="D. Kargave">
+      <router-link v-if="!isLogin" to="/login" class="login-btn">login</router-link>
+      <router-link v-else to="/" class="user-panel">
+        <img class="user-panel-photo" :src="user.photo || getImageUrl('user')" alt="D. Kargave">
         <div class="user-panel-content">
           <p>
-            <span class="user-panel-name">D. Kargave</span><span class="user-panel-who">YOU</span>
+            <span class="user-panel-name">{{ user.name }}</span><span class="user-panel-who">YOU</span>
           </p>
           <p>
-            <span class="user-panel-view-num">367 views today</span>
+            <span class="user-panel-view-num">{{ user.profile_views_today || 0 }} views today</span>
             <span class="user-panel-increase-num">+32</span>
             <img class="arrow-up-right" src="@/assets/images/arrow-up-right.png"
               alt="arrow-up-right">
@@ -176,6 +181,23 @@ const showOffcanvas = () => setOffcanvasDisplay(true);
     box-shadow: 1px 1px 5px rgba($blue-300, 0.2);
   }
 }
+.login-btn {
+  width: 330px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: $fs-4;
+  text-transform: uppercase;
+  color: $white;
+  cursor: pointer;
+  background: $blue-500;
+  border-radius: 5px;
+  margin: 5px;
+  transition: filter 0.2s;
+  &:hover {
+    filter: brightness(0.8);
+  }
+}
 .user-panel {
   width: 330px;
   display: flex;
@@ -211,9 +233,9 @@ const showOffcanvas = () => setOffcanvasDisplay(true);
 .user-panel-name {
   font-weight: bold;
   margin-right: 10px;
-  text-transform: uppercase
 }
 .user-panel-who {
+  text-transform: uppercase;
   color: rgba($dark-100, 0.2)
 }
 .user-panel-increase-num {

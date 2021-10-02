@@ -78,6 +78,10 @@ const experienceList = ref([
 ])
 
 const filterFivePerson = (users) => users.filter((user, key) => key < 5);
+
+const editAbout = () => {
+  console.log('editAbout');
+};
 </script>
 
 <template>

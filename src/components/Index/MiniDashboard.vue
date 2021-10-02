@@ -1,18 +1,35 @@
 <script setup>
-
+defineProps({
+  title: {
+    type: String,
+    default: 'your dashboard',
+  },
+  profileViews: {
+    type: Number,
+    default: 0,
+  },
+  postsViews: {
+    type: Number,
+    default: 0,
+  },
+  seachAppereances: {
+    type: Number,
+    default: 0,
+  },
+});
 </script>
 
 <template>
   <div class="aside-card">
     <div class="aside-card-header">
-      <h3 class="aside-card-title">your dashboard</h3>
+      <h3 class="aside-card-title">{{ title }}</h3>
       <router-link to="/stats" class="head-link">go to stats</router-link>
     </div>
-    <span class="dashboard-num">367</span>
-    <h4 class="dashboard-title">views today</h4>
-    <span class="dashboard-num">15</span>
+    <span class="dashboard-num">{{ profileViews }}</span>
+    <h4 class="dashboard-title">profile views</h4>
+    <span class="dashboard-num">{{ postsViews }}</span>
     <h4 class="dashboard-title">posts views</h4>
-    <span class="dashboard-num">9</span>
+    <span class="dashboard-num">{{ seachAppereances }}</span>
     <h4 class="dashboard-title">search appereances</h4>
   </div>
 </template>
