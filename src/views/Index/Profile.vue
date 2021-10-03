@@ -1,15 +1,20 @@
 <script setup>
 import { ref, inject, computed } from 'vue';
-import { apiUploadPhoto, apiUploadBackgroundImg } from '@/api';
+import { apiUploadPhoto, apiUploadBackgroundImg, apiUpdateDescription } from '@/api';
 import store from '@/composition/store';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import ProfileNav from '@/components/Index/Profile/ProfileNav.vue';
 import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
-import EditBtn from '@/components/Index/EditBtn.vue';
+import Editor from '@/components/Editor.vue';
 
-const { getProfile, setUserPhoto, setUserBackgroundImg } = store;
+const { getProfile, setUserPhoto, setUserBackgroundImg, setDescription } = store;
 const state = inject('state');
+
+getProfile();
+const user = computed(() => state.value.user);
+const bgCover = computed(() =>
+  `url(${user.value.background_cover || getImageUrl('Rectangle 3')})`);
 
 const visitors = ref([
   {
@@ -57,9 +62,30 @@ const courses = ref([
   },
 ]);
 
+const editorEl = ref(null);
+const editorOptions = ref({
+  placeholder: 'input description',
+});
+
+const isEditDescription = ref(false);
 const editDescription = () => {
-  console.log('editDescription');
-}
+  editorEl.value.setText(user.value.description);
+  isEditDescription.value = true;
+};
+
+const updateDescription = async () => {
+  const description = editorEl.value.getText();
+  try {
+    const { data } = await apiUpdateDescription(description);
+    const { description: resDescription } = data;
+    setDescription(resDescription);
+    isEditDescription.value = false;
+  } catch (err) {
+    alert(err.response.data.message);
+  }
+};
+
+const cancelEditDescription = () => isEditDescription.value = false;
 
 const uploadPhoto = async (e) => {
   const file = e.target.files[0];
@@ -86,12 +112,6 @@ const uploadBackgroundImg = async (e) => {
     alert(err.response.data.message);
   }
 };
-
-getProfile();
-const user = computed(() => state.value.user);
-
-const bgCover = computed(() =>
-  `url(${user.value.background_cover || getImageUrl('Rectangle 3')})`);
 </script>
 
 <template>
@@ -125,7 +145,7 @@ const bgCover = computed(() =>
               </button>
             </div>
           </div>
-          <div>
+          <div class="user-content-container">
             <p class="user-content">
               <span class="user-name-group">
                 <span class="user-name">{{ user.name }}</span>
@@ -137,12 +157,11 @@ const bgCover = computed(() =>
                 <span>{{ user.city }}</span>
               </router-link>
             </p>
-            <div class="user-description-container">
-              <p class="user-description">Freelance UX/UI designer, 80+ projects in web design, mobile apps
-                  (iOS & android) and creative projects. Open to offers.</p>
-              <EditBtn @edit="editDescription"/>
-            </div>
-            <div class="btns-group">
+            <Editor v-show="isEditDescription" ref="editorEl" :options="editorOptions"
+              @update="updateDescription" @cancel="cancelEditDescription" />
+            <p v-show="!isEditDescription" @dblclick="editDescription" class="user-description">
+              {{ user.description || 'empty. double click to add description' }}</p>
+            <div v-show="!isEditDescription" class="btns-group">
               <button class="contact-btn" type="button">Contact info</button>
               <button class="connections-btn" type="button">
                 {{ user.connections_qty || 0 }} connections</button>
@@ -296,7 +315,6 @@ const bgCover = computed(() =>
   > img {
     border-radius: 100%;
     height: 100%; 
-
   }
 }
 .user-photo {
@@ -346,6 +364,11 @@ const bgCover = computed(() =>
     transform: translateX(-50%) translateY(-50%);
   }
 }
+.user-content-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 .user-content {
   display: flex;
   align-items: center;
@@ -384,22 +407,18 @@ const bgCover = computed(() =>
     filter: brightness(1.3);
   }
 }
-.user-description-container {
-  position: relative;
-  &:hover {
-    .user-description-edit-btn {
-      transform: translateX(-50%) translateY(-30px);
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-}
 .user-description {
+  flex-grow: 1;
   margin-top: 10px;
   line-height: 1.5;
+  white-space: pre-wrap;
+  &:hover {
+    backdrop-filter: brightness(0.95);
+  }
 }
 .btns-group {
-  margin-top: 15px;
+  height: 40px;
+  display: flex;
 }
 .contact-btn, .connections-btn {
   width: 170px;

@@ -1,6 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject, computed } from 'vue';
+import { apiUpdateAbout } from '@/api';
+import store from '@/composition/store';
 import getImageUrl from '@/mixins/getImageUrl.js';
+import Editor from '@/components/Editor.vue';
+
+const { setUserAbout } = store;
+
+const state = inject('state');
+const user = computed(() => state.value.user);
 
 const projectsList = ref([
   {
@@ -77,18 +85,40 @@ const experienceList = ref([
   },
 ])
 
+const editorOptions = ref({ placeholder: 'input about' });
+
 const filterFivePerson = (users) => users.filter((user, key) => key < 5);
 
+const editorEl = ref(null);
+const isEditAbout = ref(false);
 const editAbout = () => {
-  console.log('editAbout');
+  const about = user.value.about;
+  editorEl.value.setText(about);
+  isEditAbout.value = true;
 };
+
+const updateAbout = async () => {
+  const about = editorEl.value.getText();
+  try {
+    const { data } = await apiUpdateAbout(about);
+    const { about: newAbout } = data;
+    setUserAbout(newAbout);
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+  isEditAbout.value = false;
+};
+
+const cancelEdit = () => isEditAbout.value = false;
 </script>
 
 <template>
   <section class="profile-card">
     <h2 class="card-title">About</h2>
-    <p class="card-paragraph">I'm more experienced in eCommerce web projects and mobile banking apps, but also like to
-      work with creative projects, such as landing pages or unusual corporate websites.</p>
+    <Editor v-show="isEditAbout" ref="editorEl" :options="editorOptions"
+      @update="updateAbout" @cancel="cancelEdit" />
+    <p v-show="!isEditAbout" class="card-paragraph" @dblclick="editAbout">
+      {{ user.about || 'empty about. double click to add about.' }}</p>
     <button type="button" class="more-btn">see more</button>
   </section>
   <section class="profile-card">
@@ -178,8 +208,12 @@ const editAbout = () => {
   color: $gray-100;
 }
 .card-paragraph {
+  white-space: pre-wrap;
   line-height: 1.5;
   margin-bottom: 20px;
+  &:hover {
+    backdrop-filter: brightness(0.95);
+  }
 }
 .more-btn {
   display: block;

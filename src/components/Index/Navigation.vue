@@ -182,7 +182,7 @@ const user = computed(() => state.value.user);
   }
 }
 .login-btn {
-  width: 330px;
+  width: 150px;
   display: flex;
   justify-content: center;
   align-items: center;

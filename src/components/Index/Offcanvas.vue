@@ -44,7 +44,7 @@ const isLogin = computed(() => state.value.isLogin);
         <img src="@/assets/images/close.png" alt="close offcanvas">
       </button>
       <div class="offcanvas-header">
-        <h3>More from LinkedIn</h3>
+        <h3>More From LinkedIn</h3>
         <button v-if="isLogin" class="logout-btn" @click="logout">logout</button>
       </div>
       <div class="offcanvas-links">

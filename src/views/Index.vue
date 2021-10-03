@@ -23,7 +23,7 @@ import Offcanvas from '@/components/Index/Offcanvas.vue';
 }
 .page-container {
   flex-grow: 1;
-  width: 1180px;
+  max-width: 1180px;
   margin: auto;
   padding: 120px 0 40px;
 }
