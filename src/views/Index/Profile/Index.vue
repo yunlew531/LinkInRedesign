@@ -5,7 +5,7 @@ import store from '@/composition/store';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import Editor from '@/components/Editor.vue';
 
-const { setUserAbout } = store;
+const { updateUserProfile } = store;
 
 const state = inject('state');
 const user = computed(() => state.value.user);
@@ -102,7 +102,7 @@ const updateAbout = async () => {
   try {
     const { data } = await apiUpdateAbout(about);
     const { about: newAbout } = data;
-    setUserAbout(newAbout);
+    updateUserProfile({ about: newAbout });
   } catch (error) {
     alert(error.response.data.message);
   }

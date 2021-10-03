@@ -142,18 +142,27 @@ const checkLogin = () => new Promise(async (resolve, reject) => {
 
 router.beforeEach(async (to, from, next) => {
   if (state.value.isLogin)
-    next();
+  next();
   else if (to.meta.requiresAuth) {
     try {
       await checkLogin();
+      setLogin();
       next();
     } catch (err) {
+      setLogin(false);
       next({ path: '/login' });
     }
   } else {
-    window.scrollTo(0, 0);
-    next();
+    try {
+      await checkLogin();
+      setLogin();
+      next();
+    } catch (err) {
+      setLogin(false);
+      next();
+    }
   }
+  window.scrollTo(0, 0);
 });
 
 export default router;

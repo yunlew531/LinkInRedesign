@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, provide } from 'vue';
 import { apiGetUser } from '@/api';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import getImageUrl from '@/mixins/getImageUrl.js';
@@ -66,36 +66,28 @@ const getUser = async () => {
   try {
     const { data } = await apiGetUser(uid.value);
     user.value = data.user;
-  } catch(err) {
+  } catch (err) {
     router.push('/notFound');
   }
 }
 getUser();
+
+provide('otherUser', user);
+
+const bgCover = computed(() => user.value.background_cover ?
+  `url(${user.value.background_cover})` : `url(${getImageUrl('Rectangle 3')})`);
 </script>
 
 <template>
   <div class="profile-container">
     <main class="profile-main">
       <section class="profile-header">
-        <div class="profile-cover">
-          <div class="profile-edit-btns-group">
-            <button type="button">
-              <img src="@/assets/images/upload.png" alt="upload">
-            </button>
-            <button type="button">edit profile</button>
-            <button type="button">
-              <img src="@/assets/images/more-horizontal.png" alt="more infomation">
-            </button>
-          </div>
-        </div>
+        <div class="profile-cover"></div>
         <div class="profile-header-content">
           <div class="user-photo">
-            <div class="user-photo-hover">
-              <img src="@/assets/images/camera.png" alt="camera">
-            </div>
-            <img src="@/assets/images/user-1-big.png" alt="Dmitry Kargaev">
+            <img :src="user.photo" alt="head portrait">
           </div>
-          <div>
+          <div class="user-content-container">
             <p class="user-content">
               <span class="user-name-group">
                 <span class="user-name">{{ user.name }}</span>
@@ -103,11 +95,10 @@ getUser();
               </span>
               <router-link to="/" class="user-position-group">
                 <img src="@/assets/images/Vector.png" alt="position mark">
-                <span>Saint Petersburg, Russian Federation</span>
+                <span>{{ user.city }}</span>
               </router-link>
             </p>
-            <p class="user-description">Freelance UX/UI designer, 80+ projects in web design, mobile apps
-                (iOS & android) and creative projects. Open to offers.</p>
+            <p class="user-description">{{ user.description }}</p>
             <div class="btns-group">
               <button class="contact-btn" type="button">Contact info</button>
               <button class="connections-btn" type="button">1,043 connections</button>
@@ -121,7 +112,7 @@ getUser();
     <aside class="aside">
       <ul>
         <li class="aside-card">
-          <MiniDashboard title="dashboard"/>
+          <MiniDashboard :profileViews="user.profile_views" title="dashboard"/>
         </li>
         <li class="aside-card">
           <AsideCard title="visitors" :headLink="{ title: 'view all', path: '/' }">
@@ -184,34 +175,9 @@ getUser();
 }
 .profile-cover {
   height: 180px;
-  background: url('@/assets/images/Rectangle 3.png') no-repeat center;
+  background: v-bind(bgCover) no-repeat center;
   background-size: cover;
   padding: 20px 30px;
-}
-.profile-edit-btns-group {
-  display: flex;
-  > button {
-    background: $white;
-    padding: 8px 12px;
-    border: none;
-    box-shadow: 0px 10px 30px rgba(113, 123, 133, 0.05);
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: color 0.2s, transform 0.2s;
-    margin-right: 10px;
-    &:hover {
-      transform: translateY(-2px);
-      color: $blue-200;
-    }
-    &:first-child {
-      margin-right: auto;
-    }
-    &:last-child {
-      margin-right: 0;
-    }
-  }
 }
 .user-photo {
   flex-shrink: 0;
@@ -219,37 +185,25 @@ getUser();
   height: 200px;
   border: 10px solid $white;
   border-radius: 100%;
+  background: $white;
   transform: translateY(-50px);
   margin: 0 30px -50px 0;
   position: relative;
   cursor: pointer;
   overflow: hidden;
+  transition: border-radius 0.2s, border-width 0.2s;
   > img {
     height: 100%;
   }
   &:hover {
-    > .user-photo-hover {
-      opacity: 0.5;
-    }
+    border-radius: 5px;
+    border: 0px solid $white;
   }
 }
-.user-photo-hover {
-  opacity: 0;
+.user-content-container {
   width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: $dark-100;
-  border-radius: 100%;
-  transition: opacity 0.2s;
-  > img {
-    height: 50px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-  }
+  display: flex;
+  flex-direction: column;
 }
 .user-content {
   display: flex;
@@ -290,6 +244,8 @@ getUser();
   }
 }
 .user-description {
+  flex-grow: 1;
+  white-space: pre-wrap;
   margin-top: 10px;
   line-height: 1.5;
 }
@@ -302,12 +258,12 @@ getUser();
   padding: 10px 0;
   border-radius: 4px;
   cursor: pointer;
+  border: 1px solid $blue-200;
   transition: background-color 0.2s,  color 0.2s;
 }
 .contact-btn {
-  background: $blue-200;
   color: $white;
-  border: none;
+  background: $blue-200;
   margin-right: 15px;
   &:hover {
     background: $white;
@@ -316,9 +272,8 @@ getUser();
   }
 }
 .connections-btn {
-  background: $white;
-  border: 1px solid $blue-200;
   color: $blue-200;
+  background: $white;
    &:hover {
     background: $blue-200;
     color: $white;
