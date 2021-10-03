@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import getImageUrl from '@/mixins/getImageUrl.js';
+
+const user = inject('otherUser');
 
 const projectsList = ref([
   {
@@ -83,8 +85,7 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
 <template>
   <section class="profile-card">
     <h2 class="card-title">About</h2>
-    <p class="card-paragraph">I'm more experienced in eCommerce web projects and mobile banking apps, but also like to
-      work with creative projects, such as landing pages or unusual corporate websites.</p>
+    <p class="card-paragraph">{{ user.about || 'empty' }}</p>
     <button type="button" class="more-btn">see more</button>
   </section>
   <section class="profile-card">
@@ -174,6 +175,7 @@ const filterFivePerson = (users) => users.filter((user, key) => key < 5);
   color: $gray-100;
 }
 .card-paragraph {
+  white-space: pre-wrap;
   line-height: 1.5;
   margin-bottom: 20px;
 }

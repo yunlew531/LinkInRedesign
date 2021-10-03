@@ -1,10 +1,11 @@
 <script setup>
 import { ref, inject, computed } from 'vue';
 import store from '@/composition/store.js';
+import { apiGetPhoto } from '@/api';
 import getImageUrl from '@/mixins/getImageUrl.js';
 
 const state = inject('state');
-const { setOffcanvasDisplay } = store;
+const { setOffcanvasDisplay, updateUserProfile } = store;
 
 const isLogin = computed(() => state.value.isLogin);
 
@@ -38,6 +39,14 @@ const navList = ref([
 
 const showOffcanvas = () => setOffcanvasDisplay(true);
 const user = computed(() => state.value.user);
+const getPhoto = async () => {
+  try {
+    const { data } = await apiGetPhoto();
+    const { photo, name } = data.user;
+    updateUserProfile({ photo, name });
+  } catch (error) {}
+};
+getPhoto();
 </script>
 
 <template>

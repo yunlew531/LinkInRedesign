@@ -16,20 +16,18 @@ const getProfile = async () => {
 
 const setOffcanvasDisplay = (boolean = true) => state.value.isOffcanvasShow = boolean;
 const setLogin = (boolean = true) => state.value.isLogin = boolean;
-const setUserPhoto = (url) => state.value.user.photo = url;
-const setUserBackgroundImg = (url) => state.value.user.background_cover = url;
 const setUser = (payload) => state.value.user = payload;
-const setDescription = (description) => state.value.user.description = description;
-const setUserAbout = (about) => state.value.user.about = about;
+const updateUserProfile = (options) => {
+  const optionsKeys = Object.keys(options);
+  const optionsValues = Object.values(options);
+  optionsKeys.forEach((key, idx) => state.value.user[key] = optionsValues[idx]);
+};
 
 export default {
   state: readonly(state),
   getProfile,
   setOffcanvasDisplay,
   setLogin,
-  setUserPhoto,
-  setUserBackgroundImg,
   setUser,
-  setDescription,
-  setUserAbout,
+  updateUserProfile,
 };

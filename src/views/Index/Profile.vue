@@ -8,7 +8,7 @@ import MiniDashboard from '@/components/Index/MiniDashboard.vue';
 import AsideCard from '@/components/Index/AsideCard.vue';
 import Editor from '@/components/Editor.vue';
 
-const { getProfile, setUserPhoto, setUserBackgroundImg, setDescription } = store;
+const { getProfile, updateUserProfile } = store;
 const state = inject('state');
 
 getProfile();
@@ -78,7 +78,7 @@ const updateDescription = async () => {
   try {
     const { data } = await apiUpdateDescription(description);
     const { description: resDescription } = data;
-    setDescription(resDescription);
+    updateUserProfile({ description: resDescription });
     isEditDescription.value = false;
   } catch (err) {
     alert(err.response.data.message);
@@ -94,7 +94,7 @@ const uploadPhoto = async (e) => {
   try {
     const { data } = await apiUploadPhoto(formData);
     const { url } = data;
-    setUserPhoto(url);
+    updateUserProfile({ photo: url });
   } catch (err) {
     alert(err.response.data.message);
   }
@@ -107,7 +107,7 @@ const uploadBackgroundImg = async (e) => {
   try {
     const { data } = await apiUploadBackgroundImg(formData);
     const { url } = data;
-    setUserBackgroundImg(url);
+    updateUserProfile({ background_cover: url });
   } catch (err) {
     alert(err.response.data.message);
   }
@@ -138,12 +138,10 @@ const uploadBackgroundImg = async (e) => {
             <div class="user-photo-hover">
               <img src="@/assets/images/camera.png" alt="camera">
             </div>
-            <div class="user-photo-content">
-              <img :src="user.photo || getImageUrl('user')" alt="user photo">
-              <button v-if="!user.photo" type="button" class="upload-photo-btn">
-                <img src="@/assets/images/upload.png" alt="upload">
-              </button>
-            </div>
+            <img :src="user.photo || getImageUrl('user')" alt="user photo">
+            <button v-if="!user.photo" type="button" class="upload-photo-btn">
+              <img src="@/assets/images/upload.png" alt="upload">
+            </button>
           </div>
           <div class="user-content-container">
             <p class="user-content">
@@ -157,7 +155,7 @@ const uploadBackgroundImg = async (e) => {
                 <span>{{ user.city }}</span>
               </router-link>
             </p>
-            <Editor v-show="isEditDescription" ref="editorEl" :options="editorOptions"
+            <Editor v-show="isEditDescription" ref="editorEl" :options="editorOptions" marginY="20px"
               @update="updateDescription" @cancel="cancelEditDescription" />
             <p v-show="!isEditDescription" @dblclick="editDescription" class="user-description">
               {{ user.description || 'empty. double click to add description' }}</p>
@@ -221,6 +219,7 @@ const uploadBackgroundImg = async (e) => {
 
 .profile-container {
   display: flex;
+  position: relative;
 }
 .profile-main {
   flex-grow: 1;
@@ -310,30 +309,30 @@ const uploadBackgroundImg = async (e) => {
     transform: translateY(0px);
   }
 }
-.user-photo-content {
-  height: 100%;
-  > img {
-    border-radius: 100%;
-    height: 100%; 
-  }
-}
 .user-photo {
   flex-shrink: 0;
   width: 200px;
   height: 200px;
-  border: 10px solid $white;
-  border-radius: 100%;
   transform: translateY(-50px);
   margin: 0 30px -50px 0;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
   > img {
     height: 100%;
+    border: 10px solid $white;
+    background: $white;
     border-radius: 100%;
+    transition: border-radius 0.2s, border-width 0.2s;
   }
   &:hover {
     > .user-photo-hover {
       opacity: 0.5;
+      border-radius: 5px;
+    }
+    > img {
+      border-radius: 5px;
+      border: 0px solid $white;
     }
   }
 }
@@ -351,11 +350,11 @@ const uploadBackgroundImg = async (e) => {
   width: 100%;
   height: 100%;
   position: absolute;
+  border-radius: 100%;
   top: 0;
   left: 0;
   background: $dark-100;
-  border-radius: 100%;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, border-radius 0.2s;
   > img {
     height: 50px;
     position: absolute;
@@ -417,21 +416,20 @@ const uploadBackgroundImg = async (e) => {
   }
 }
 .btns-group {
-  height: 40px;
   display: flex;
 }
 .contact-btn, .connections-btn {
   width: 170px;
   text-transform: uppercase;
-  padding: 10px 0;
+  border: 1px solid $blue-200;
   border-radius: 4px;
   cursor: pointer;
+  padding: 10px 0;
   transition: background-color 0.2s,  color 0.2s;
 }
 .contact-btn {
-  background: $blue-200;
   color: $white;
-  border: none;
+  background: $blue-200;
   margin-right: 15px;
   &:hover {
     background: $white;
@@ -440,9 +438,8 @@ const uploadBackgroundImg = async (e) => {
   }
 }
 .connections-btn {
-  background: $white;
-  border: 1px solid $blue-200;
   color: $blue-200;
+  background: $white;
    &:hover {
     background: $blue-200;
     color: $white;

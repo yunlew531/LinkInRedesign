@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, defineExpose } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const props = defineProps({
   options: {
@@ -9,9 +9,21 @@ const props = defineProps({
   theme: {
     type: String,
     default: 'snow',
+  },
+  height: {
+    type: String,
+    default: '100px',
+  },
+  toolbar: {
+    type: Boolean,
+    default: false,
+  },
+  marginY: {
+    type: String,
+    default: '0px',
   }
 });
-const { options, theme } = props;
+const { options, theme, height, toolbar, marginY } = props;
 
 const editorEl = ref(null);
 let quill = null;
@@ -37,16 +49,18 @@ defineExpose({
 </script>
 
 <template>
-  <div>
-    <div class="editor">
+  <div class="editor-container">
+    <div class="editor" :class="{ 'toolbar-show' : toolbar }">
       <div ref="editorEl"></div>
     </div>
-    <div class="buttons">
-      <button type="button" class="cancel-edit-btn"
-        @click="cancelEditAbout">cancel</button>
-      <button type="button" class="save-btn"
-        @click="updateAbout">save</button>
-    </div>
+    <slot name="buttons">
+      <div class="buttons">
+        <button type="button" class="cancel-edit-btn"
+          @click="cancelEditAbout">cancel</button>
+        <button type="button" class="save-btn"
+          @click="updateAbout">save</button>
+      </div>
+    </slot>
   </div>
 </template>
 
@@ -55,18 +69,30 @@ defineExpose({
 
 .editor {
   white-space: pre-wrap;
-  margin: 20px 0;
+  margin: v-bind(marginY) 0;
+  &.toolbar-show {
+    ::v-deep(.ql-toolbar.ql-snow) {
+      display: block;
+    }
+    ::v-deep(.ql-toolbar.ql-snow + .ql-container.ql-snow) {
+      border-radius: 0 0 5px 5px;
+      border-top: none;
+    }
+    ::v-deep(.ql-toolbar.ql-snow) {
+      border-radius: 5px 5px 0 0;
+    }
+  }
 }
-::v-deep .ql-toolbar.ql-snow + .ql-container.ql-snow {
+::v-deep(.ql-toolbar.ql-snow + .ql-container.ql-snow) {
   border-radius: 5px;
   font-size: $fs-5;
   border-top: 1px solid #ccc;
 }
-::v-deep .ql-toolbar.ql-snow {
+::v-deep(.ql-toolbar.ql-snow) {
   display: none;
 }
-::v-deep .ql-editor {
-  min-height: 100px;
+::v-deep(.ql-editor) {
+  min-height: v-bind(height);
   flex-grow: 1;
 }
 .buttons {
@@ -79,7 +105,7 @@ defineExpose({
   padding: 10px 0;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s,  color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
 }
 .save-btn {
   background: $blue-200;
