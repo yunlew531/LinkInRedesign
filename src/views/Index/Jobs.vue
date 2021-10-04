@@ -172,8 +172,9 @@ const searchTheHistory = (id) => {
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
-@mixin card {
+@mixin job-card {
   padding: 25px 30px;
   border-radius: 4px;
   box-shadow: 0px 20px 60px $gray-200;
@@ -188,7 +189,7 @@ const searchTheHistory = (id) => {
   display: flex;
 }
 .search-panel {
-  @include card;
+  @include job-card;
 }
 .search-panel-header {
   font-size: $fs-6;
@@ -253,27 +254,23 @@ const searchTheHistory = (id) => {
   }
 }
 .post-job-card {
-  @include card;
+  @include job-card;
 }
 .post-job-btn {
+  @include button;
   width: 100%;
-  text-transform: uppercase;
-  font-weight: bold;
-  background: $blue-400;
   color: $white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 10px;
+  background: $blue-200;
   &:hover {
-    filter: brightness(1.1);
+    color: $blue-200;
+    background: $white;
   }
   &:active {
-    filter: brightness(0.9);
+    filter: brightness(0.95);
   }
 }
 .job-card {
-  @include card;
+  @include job-card;
   display: flex;
   margin-bottom: 10px;
   &:last-child {
@@ -310,19 +307,17 @@ const searchTheHistory = (id) => {
 }
 .job-card-more-btn {
   align-self: center;
+  @include button;
+  width: inherit;
   color: $white;
-  font-weight: bold;
-  text-transform: uppercase;
-  background: $blue-400;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  background: $blue-200;
   padding: 10px 25px;
   &:hover {
-    filter: brightness(1.1);
+    background: $white;
+    color: $blue-200;
   }
   &:active {
-    filter: brightness(0.9);
+    filter: brightness(0.95);
   }
 }
 .aside {
@@ -387,7 +382,10 @@ const searchTheHistory = (id) => {
   cursor: pointer;
   transition: transform 0.2s;
   &:hover {
-    transform: translateX(5px) skewX(-10deg);
+    transform: translateX(5px);
+  }
+  &:active {
+    filter: brightness(0.5);
   }
 }
 .tracked-jobs-list {

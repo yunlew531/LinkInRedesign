@@ -249,6 +249,7 @@ const showBtnsList = (feedId, event) => {
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 @mixin card {
   background: $white;
@@ -480,19 +481,17 @@ const showBtnsList = (feedId, event) => {
   border-bottom: 1px solid $white-100;
 }
 .write-article-btn {
+  @include button;
   width: 100%;
   color: $white;
-  text-transform: uppercase;
-  cursor: pointer;
-  background: $blue-400;
-  border-radius: 4px;
-  border: 1px solid $blue-400;
+  background: $blue-200;
   padding: 10px;
   &:hover {
-    filter: brightness(0.9);
+    color: $blue-200;
+    background: $white;
   }
   &:active {
-    filter: brightness(0.8);
+    filter: brightness(0.95);
   }
 }
 .aside-edit-list-btn, .show-all-btn {
@@ -502,11 +501,12 @@ const showBtnsList = (feedId, event) => {
   border: none;
   font-weight: bold;
   background: transparent;
+  transition: transform 0.2s, filter 0.2s;
   &:hover {
-    filter: brightness(1.3);
+    transform: translateX(5px);
   }
   &:active {
-    filter: brightness(0.8);
+    filter: brightness(0.6);
   }
 }
 .aside-card-body {

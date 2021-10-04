@@ -216,6 +216,7 @@ const uploadBackgroundImg = async (e) => {
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 .profile-container {
   display: flex;
@@ -267,20 +268,24 @@ const uploadBackgroundImg = async (e) => {
   position: relative;
   margin-right: auto;
   transition: transform 0.2s;
+  cursor: pointer;
   > button {
     height: 100%;
     margin-right: 0;
   }
   > input {
-    cursor: pointer;
+    display: block;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    cursor: pointer; 
     border: dashed 1px red;
     opacity: 0;
-    z-index: 1;
+  }
+  > input[type=file]::-webkit-file-upload-button {
+    cursor: pointer; 
   }
   &:hover {
     transform: translateY(-2px);
@@ -419,30 +424,26 @@ const uploadBackgroundImg = async (e) => {
   display: flex;
 }
 .contact-btn, .connections-btn {
-  width: 170px;
-  text-transform: uppercase;
-  border: 1px solid $blue-200;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 10px 0;
-  transition: background-color 0.2s,  color 0.2s;
+  @include button;
+  &:active {
+    filter: brightness(0.95);
+  }
 }
 .contact-btn {
   color: $white;
   background: $blue-200;
   margin-right: 15px;
   &:hover {
-    background: $white;
     color: $blue-200;
-    border: 1px solid $blue-200;
+    background: $white;
   }
 }
 .connections-btn {
   color: $blue-200;
   background: $white;
-   &:hover {
-    background: $blue-200;
+  &:hover {
     color: $white;
+    background: $blue-200;
   }
 }
 .aside {

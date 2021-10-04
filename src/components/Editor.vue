@@ -66,6 +66,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 .editor {
   white-space: pre-wrap;
@@ -100,17 +101,11 @@ defineExpose({
   margin-top: 20px;
 }
 .save-btn, .cancel-edit-btn {
-  width: 170px;
-  text-transform: uppercase;
-  padding: 10px 0;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  @include button;
 }
 .save-btn {
   background: $blue-200;
   color: $white;
-  border: none;
   margin: 0 0 0 15px;
   &:hover {
     background: $white;
@@ -120,7 +115,6 @@ defineExpose({
 }
 .cancel-edit-btn {
   background: $white;
-  border: 1px solid $blue-200;
   color: $blue-200;
    &:hover {
     background: $blue-200;

@@ -155,6 +155,7 @@ const bgCover = computed(() => user.value.background_cover ?
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 .profile-container {
   display: flex;
@@ -253,30 +254,26 @@ const bgCover = computed(() => user.value.background_cover ?
   margin-top: 15px;
 }
 .contact-btn, .connections-btn {
-  width: 170px;
-  text-transform: uppercase;
-  padding: 10px 0;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 1px solid $blue-200;
-  transition: background-color 0.2s,  color 0.2s;
+  @include button;
+  &:active {
+    filter: brightness(0.95);
+  }
 }
 .contact-btn {
   color: $white;
   background: $blue-200;
   margin-right: 15px;
   &:hover {
-    background: $white;
     color: $blue-200;
-    border: 1px solid $blue-200;
+    background: $white;
   }
 }
 .connections-btn {
   color: $blue-200;
   background: $white;
-   &:hover {
-    background: $blue-200;
+  &:hover {
     color: $white;
+    background: $blue-200;
   }
 }
 .aside {

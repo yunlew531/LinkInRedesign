@@ -54,6 +54,7 @@ const receivedUsers = ref([
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 @mixin card {
   display: flex;
@@ -152,17 +153,14 @@ const receivedUsers = ref([
   margin: 0 50px;
 }
 .received-card-accept-btn, .received-card-decline-btn {
-  text-transform: uppercase;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 4px;
+  @include button;
+  width: inherit;
   padding: 10px 20px;
   transition: filter 0.2s;
 }
 .received-card-accept-btn {
   color: $white;
   background: $blue-400;
-  border: none;
   &:hover {
     filter: brightness(1.1);
   }
@@ -175,7 +173,7 @@ const receivedUsers = ref([
   border: 1px solid $gray-300;
   background: transparent;
   margin-left: 15px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, filter 0.2s;
   &:hover {
     filter: brightness(0.9);
   }

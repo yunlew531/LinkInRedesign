@@ -133,8 +133,11 @@ const showProjectModal = (key) => {
     <button type="button" class="more-btn">see more</button>
   </section>
   <section class="profile-card">
-    <h2 class="projects-section-title card-title">Projects</h2>
-    <span class="projects-section-subtitle">3 of 12</span>
+    <div class="projects-header">
+      <h2 class="projects-title card-title">Projects</h2>
+      <span class="projects-subtitle">3 of 12</span>
+      <button type="button" class="projects-create-btn">Create</button>
+    </div>
     <ul class="project-list">
       <li v-for="(project, key) in projectsList" :key="project.title" class="project-card"
         @click="showProjectModal(key)">
@@ -199,6 +202,7 @@ const showProjectModal = (key) => {
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 .profile-card {
   padding: 30px;
@@ -207,17 +211,34 @@ const showProjectModal = (key) => {
   border-radius: 4px;
   margin-bottom: 20px;
 }
+.projects-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
 .card-title {
   text-transform: uppercase;
   font-size: $fs-4;
   font-weight: bold;
   margin: 0 10px 25px 0;
 }
-.projects-section-title {
+.projects-title {
   display: inline-block;
+  margin: 0;
 }
-.projects-section-subtitle {
+.projects-subtitle {
   color: $gray-100;
+  margin-left: 10px;
+}
+.projects-create-btn {
+  @include button;
+  background: $blue-200;
+  color: $white;
+  margin-left: auto;
+  &:hover {
+    color: $blue-200;
+    background: $white;
+  }
 }
 .card-paragraph {
   white-space: pre-wrap;

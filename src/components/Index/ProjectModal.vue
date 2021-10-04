@@ -115,6 +115,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 ::v-deep(.simplebar-content) {
   min-height: 100vh;
@@ -185,23 +186,14 @@ defineExpose({
   }
 }
 .edit-project-btn {
-  width: 170px;
+  @include button;
   align-self: end;
   color: $white;
-  text-transform: uppercase;
-  display: block;
-  cursor: pointer;
-  border: 1px solid $blue-200;
   background: $blue-200;
-  border-radius: 5px;
-  letter-spacing: 0.03rem;
   margin-bottom: 20px;
-  padding: 10px;
-  transition: background-color 0.2s, color 0.2s;
   &:hover {
     background: $white;
     color: $blue-200;
-    border: 1px solid $blue-200;
   }
 }
 .left-arrow, .right-arrow {

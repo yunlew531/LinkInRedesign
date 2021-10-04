@@ -76,6 +76,7 @@ const navLinks = ref([
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 .container {
   width: 1180px;
@@ -139,21 +140,12 @@ const navLinks = ref([
   }
 }
 .questions-btn, .settings-btn {
-  width: 100%;
-  border: 1px solid #0275B1;
-  border-radius: 4px;
-  padding: 10px 15px;
-  text-transform: uppercase;
-  font-weight: bold;
-  &:hover {
-    cursor: pointer;
-  }
+  @include button;
 }
 .questions-btn {
   background: $blue-400;
-  margin-bottom: 10px;
   color: $white;
-  transition: background-color 0.2s, color 0.2s;
+  margin-bottom: 10px;
   &:hover {
     background: $white;
     color: $blue-400;
@@ -162,7 +154,6 @@ const navLinks = ref([
 .settings-btn {
   background: $white;
   color: $blue-400;
-  transition: background-color 0.2s, color 0.2s;
   &:hover {
     background: $blue-400;
     color: $white;

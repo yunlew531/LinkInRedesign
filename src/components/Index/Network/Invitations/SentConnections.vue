@@ -45,7 +45,7 @@ const receivedUsers = ref([
           <h3>YOUR MESSAGE</h3>
           <p>{{ user.content || 'empty' }}</p>
         </div>
-        <button type="button" class="sent-card-cancel-btn">cancel</button>
+        <button type="button" class="cancel-sent-connetion-btn">cancel</button>
       </li>
     </ul>
   </div>
@@ -53,15 +53,7 @@ const receivedUsers = ref([
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
-
-@mixin card {
-  display: flex;
-  align-items: center;
-  background: $white;
-  border-radius: 4px;
-  padding: 20px 30px;
-  margin-bottom: 10px;
-}
+@import '@/assets/styleSheets/mixins';
 
 .divide {
   width: 100%;
@@ -150,16 +142,13 @@ const receivedUsers = ref([
     color: rgba($dark-100, 0.6);
   }
 }
-.sent-card-cancel-btn {
-  text-transform: uppercase;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 10px 20px;
-  transition: filter 0.2s;
+.cancel-sent-connetion-btn {
+  @include button;
+  width: inherit;
   color: $white;
-  background: $blue-400;
-  border: none;
+  background: $blue-200;
+  transition: filter 0.2s;
+  padding: 10px 20px;
   &:hover {
     filter: brightness(1.1);
   }

@@ -95,6 +95,7 @@ getPhoto();
 
 <style lang="scss" scoped>
 @import 'src/assets/styleSheets/variables';
+@import 'src/assets/styleSheets/mixins';
 
 .nav {
   height: 80px;
@@ -191,20 +192,17 @@ getPhoto();
   }
 }
 .login-btn {
-  width: 150px;
+  @include button;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: $fs-4;
-  text-transform: uppercase;
   color: $white;
-  cursor: pointer;
   background: $blue-500;
-  border-radius: 5px;
   margin: 5px;
-  transition: filter 0.2s;
   &:hover {
-    filter: brightness(0.8);
+    background: $white;
+    color: $blue-200;
   }
 }
 .user-panel {
@@ -255,7 +253,6 @@ getPhoto();
   margin-right: 5px;
 }
 .other-btn {
-  align-self: stretch;
   display: flex;
   flex-direction: column;
   justify-content: center;

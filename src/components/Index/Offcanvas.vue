@@ -76,6 +76,7 @@ const isLogin = computed(() => state.value.isLogin);
 
 <style lang="scss" scoped>
 @import '@/assets/styleSheets/variables';
+@import '@/assets/styleSheets/mixins';
 
 .offcanvas-panel {
   &.show {
@@ -143,20 +144,15 @@ const isLogin = computed(() => state.value.isLogin);
   padding: 30px 20px;
 }
 .logout-btn {
+  @include button;
+  width: inherit;
   font-size: $fs-5;
-  text-transform: uppercase;
   color: $white;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
   background: $blue-200;
   padding: 8px 16px;
-  transition: filter 0.2s;
   &:hover {
-    filter: brightness(1.2);
-  }
-  &:active {
-    filter: brightness(0.9);
+    background: $white;
+    color: $blue-200;
   }
 }
 .offcanvas-links {
