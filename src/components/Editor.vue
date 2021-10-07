@@ -21,9 +21,14 @@ const props = defineProps({
   marginY: {
     type: String,
     default: '0px',
+  },
+  deleteBtn: {
+    type: Boolean,
+    default: false,
   }
 });
 const { options, theme, height, toolbar, marginY } = props;
+const deleteBtnStyle = computed(() => props.deleteBtn ? 'visible' : 'hidden');
 
 const editorEl = ref(null);
 let quill = null;
@@ -34,17 +39,22 @@ onMounted(() => {
   });
 });
 
-const emits = defineEmits(['cancel', 'update']);
+const emits = defineEmits(['cancel', 'update', 'delete']);
 
-const cancelEditAbout = () => emits('cancel');
-const updateAbout = () => emits('update');
+const cancelEdit = () => emits('cancel');
+const update = () => emits('update');
+const deleteArticle = () => emits('delete');
 
 const getText = () => quill.getText().trim();
 const setText = (text = '') => quill.setText(text);
+const getContents = (content) => quill.getContents(content);
+const setContents = (content) => quill.setContents(content);
 
 defineExpose({
   getText,
   setText,
+  getContents,
+  setContents,
 });
 </script>
 
@@ -55,10 +65,11 @@ defineExpose({
     </div>
     <slot name="buttons">
       <div class="buttons">
+        <button type="button" class="delete-btn" @click="deleteArticle">delete</button>
         <button type="button" class="cancel-edit-btn"
-          @click="cancelEditAbout">cancel</button>
+          @click="cancelEdit">cancel</button>
         <button type="button" class="save-btn"
-          @click="updateAbout">save</button>
+          @click="update">post</button>
       </div>
     </slot>
   </div>
@@ -99,9 +110,23 @@ defineExpose({
 .buttons {
   text-align: end;
   margin-top: 20px;
+  display: flex;
 }
-.save-btn, .cancel-edit-btn {
+.save-btn, .cancel-edit-btn, .delete-btn {
   @include button;
+  &:active {
+    filter: brightness(0.95);
+  }
+}
+.delete-btn {
+  visibility: v-bind(deleteBtnStyle);
+  background: $red-100;
+  color: $white;
+  border: none;
+  margin: 0 auto 0 0;
+  &:hover {
+    filter: brightness(1.1);
+  }
 }
 .save-btn {
   background: $blue-200;
@@ -110,7 +135,6 @@ defineExpose({
   &:hover {
     background: $white;
     color: $blue-200;
-    border: 1px solid $blue-200;
   }
 }
 .cancel-edit-btn {

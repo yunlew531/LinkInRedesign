@@ -4,7 +4,7 @@ import { getUser } from './Index/user_profile';
 // auth
 import { register, signIn, logout, checkLogin } from './Index/login';
 import { getProfile, uploadPhoto, uploadBackgroundImg, updateDescription, updateAbout,
-  getPhoto } from './Index/profile';
+  getPhoto, createProject, updateProject, deleteProject } from './Index/profile';
 
 // normal
 export const apiGetUser = getUser;
@@ -20,3 +20,6 @@ export const apiUploadBackgroundImg = uploadBackgroundImg;
 export const apiUpdateDescription = updateDescription;
 export const apiUpdateAbout = updateAbout;
 export const apiGetPhoto = getPhoto;
+export const apiCreateProject = createProject;
+export const apiUpdateProject = updateProject;
+export const apiDeleteProject = deleteProject;

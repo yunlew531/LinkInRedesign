@@ -1,6 +1,7 @@
 <script setup>
 import { ref, inject, computed } from 'vue';
 import { apiUpdateAbout } from '@/api';
+import dayjs from '@/mixins/dayjs';
 import store from '@/composition/store';
 import getImageUrl from '@/mixins/getImageUrl.js';
 import Editor from '@/components/Editor.vue';
@@ -11,26 +12,26 @@ const { updateUserProfile } = store;
 const state = inject('state');
 const user = computed(() => state.value.user);
 
-const projectsList = ref([
-  {
-    title: 'Zara redesign concept',
-    subtitle: 'UX/UI design, 15.07.2019',
-    fileName: 'Projects-1',
-    content: 'lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem ',
-  },
-  {
-    title: 'SCTHON event brand identity',
-    subtitle: 'Graphic design, 03.31.2019',
-    fileName: 'Projects-2',
-    update_time: 1632871052060,
-    create_time: 1632611847362,
-  },
-  {
-    title: 'Drozd. Brand identity. 2016',
-    subtitle: 'Graphic design, 03.04.2016',
-    fileName: 'Projects-3',
-  },
-]);
+// const projects = ref([
+//   {
+//     title: 'Zara redesign concept',
+//     subtitle: 'UX/UI design, 15.07.2019',
+//     fileName: 'Projects-1',
+//     content: 'lorem lorem lorem',
+//   },
+//   {
+//     title: 'SCTHON event brand identity',
+//     subtitle: 'Graphic design, 03.31.2019',
+//     fileName: 'Projects-2',
+//     update_time: 1632871052060,
+//     create_time: 1632611847362,
+//   },
+//   {
+//     title: 'Drozd. Brand identity. 2016',
+//     subtitle: 'Graphic design, 03.04.2016',
+//     fileName: 'Projects-3',
+//   },
+// ]);
 
 const skillsList = ref([
   {
@@ -115,16 +116,33 @@ const updateAbout = async () => {
 
 const cancelEdit = () => isEditAbout.value = false;
 
+const currentProject = ref({});
+const currentProjectIdx = ref(0);
 const projectModalEl = ref(null);
-const showProjectModal = (key) => {
-  projectModalEl.value.currentProjectIdx = key;
+const showProjectModal = (project, key) => {
+  currentProject.value = project;
+  currentProjectIdx.value = key;
+  projectModalEl.value.setModalStatus('update');
   projectModalEl.value.showModal();
+};
+const setCurrentProject = (project) => currentProject.value = project;
+const setCurrentIdx = (idx) => {
+  currentProjectIdx.value = idx;
+  currentProject.value = user.value.projects[idx];
+};
+const createProject = () => projectModalEl.value.createProject();
+
+const handleProjectImg = (project) => {
+  const hasImage = project.content.ops.filter((op) => op.insert.image)[0];
+  return hasImage ? hasImage.insert.image : getImageUrl('image');
 };
 </script>
 
 <template>
   <section class="profile-card">
-    <ProjectModal ref="projectModalEl" :projects="projectsList" />
+    <ProjectModal ref="projectModalEl" :projects="user.projects"
+      :currentProject="currentProject" :currentProjectIdx="currentProjectIdx"
+      @setCurrentProject="setCurrentProject" @setCurrentIdx="setCurrentIdx" />
     <h2 class="card-title">About</h2>
     <Editor v-show="isEditAbout" ref="editorEl" :options="editorOptions"
       @update="updateAbout" @cancel="cancelEdit" />
@@ -136,15 +154,17 @@ const showProjectModal = (key) => {
     <div class="projects-header">
       <h2 class="projects-title card-title">Projects</h2>
       <span class="projects-subtitle">3 of 12</span>
-      <button type="button" class="projects-create-btn">Create</button>
+      <button type="button" class="projects-create-btn" @click="createProject">Create</button>
     </div>
     <ul class="project-list">
-      <li v-for="(project, key) in projectsList" :key="project.title" class="project-card"
-        @click="showProjectModal(key)">
+      <li v-for="(project, key) in user.projects" :key="project.id" class="project-card"
+        @click="showProjectModal(project, key)">
         <router-link to="/">
-          <img :src="getImageUrl(project.fileName)" alt="project.title" class="project-img">
+          <img :src="handleProjectImg(project)" :alt="project.title" class="project-img">
           <h3 class="project-card-title">{{ project.title }}</h3>
-          <h4 class="project-card-subtitle">{{ project.subtitle }}</h4>
+          <span class="project-card-subtitle">
+            {{ dayjs(project.create_time * 1000).format('YYYY/MM/DD') }}
+          </span>
         </router-link>
       </li>
     </ul>
@@ -293,6 +313,8 @@ const showProjectModal = (key) => {
 }
 .project-img {
   width: 100%;
+  height: 200px;
+  border-radius: 10px;
   margin-bottom: 15px;
 }
 .skills-list {
